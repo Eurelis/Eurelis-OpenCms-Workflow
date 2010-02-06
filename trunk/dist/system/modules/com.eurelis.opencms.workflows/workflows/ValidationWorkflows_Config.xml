@@ -1,0 +1,49 @@
+<!-- This file store the configuration specificities of the workflow "ValidationWorkflow.xml" -->
+<workflow name="ValidationWorkflow">
+	
+	<!-- The dynamic parameters required when starting the workflow -->
+	<params>
+	
+		<!-- The type of the parameters is actually restricted to the Java primitive data type -->
+		<!-- Please be careful, the parser is case-sensitive  -->
+		<!-- The default field is the value that will be displayed  per default. -->
+		<!-- For boolean, is the default value is incorrect, the false value will be used. (List of default value are not accepted  -->
+		<!-- You can set a list of default value (will be presented in a Combobox) by separing each value with a "|" -->
+		<param name="SelectFileRecursively" type="boolean" display="Select files recursively" default="true"/>
+		<param name="SelectAssociatedFile" type="boolean" display="Select associated files"/>
+		<param name="CheckOffline" type="boolean" display="Select only offline files"/>
+		
+	</params>
+	
+	<!-- The rights associated to the current user per branches -->
+	<rights>
+	
+		<!-- For each branch of the system, the rights are defined for user/group and roles -->
+		<!-- The rights are defined recursively, so if the rights of a sub-branches doesn't  -->
+		<!--  restrict rights, the rights of the main folder is used.  -->
+		<!-- Priority is given to the deny of rights. So if none allowance is found, -->
+		<!--  the resource cannot be acceded. -->
+		<!-- The path could be a java regular expression (MUST BE indicated by using brackets) -->
+		<branch path="/">
+			
+				<!-- For each group/role/user a java regular expression can be used(MUST BE indicated by using brackets) -->
+				<!-- The type indicate the right of the user. The order doesn't matter.  -->
+				<!--  * The "r" indicate that the user/group/role could access the informations of the workflow (but cannot act on it)  -->
+				<!--  * The "w" indicate that the user/group/role could act on the workflow (but cannot access informations) -->
+				<!-- If none type is set, or empty type, the allowance for the group is ignored. -->
+					
+				<allowRole name="Root administrator" type="rw"/>
+				
+		</branch>
+		
+		
+		<branch path="{^/sites/default/allowed/all/.*$}">				
+				
+				<allowUser name="bbbb" type="r"/>
+				<allowUser name="cccc" type="w"/>
+		</branch>		
+		
+		
+	
+	</rights>
+</workflow>

@@ -1,0 +1,47 @@
+<!-- This file store the allowance associated to the workflow "mySimpleWorkflow.xml" -->
+<allowance>
+
+	<!-- The type of resources that can support the given workflow -->
+	<resourcetypes>
+		<resourcetype name="image" />
+		<resourcetype name="jsp" />
+	</resourcetypes>
+
+	<!-- the users/groups/roles that can initialize the workflow -->
+	<initialization>
+		<allowedUser name="Admin"/>
+		<allowedGroup name="Projectmanagers"/>
+		<allowedRole name="Workplace User"/>	
+	</initialization>
+		
+	<!-- the default rights in case of an action or more have no specifics rights -->
+	<default>
+		<allowedUser name="Admin" />
+		<allowedGroup name="Projectmanagers" />
+		<allowedRole name="Workplace User" />
+	</default>
+
+	<!-- The specification of the allowed users/groups/roles that are allowed to execute the given action -->
+	<action id="7">
+		<allowedUser name="Admin" />
+		<allowedUser name="User1" />
+	</action>
+	<action id="1">
+		<allowedGroup name="Administrator" />
+		<allowedGroup name="Reviewers" />
+		<allowedUser name="User1" />
+	</action>
+	<action id="22">
+		<allowedUser name="Admin" />
+		<allowedGroup name="Projectmanagers" />
+	</action>
+	<action id="28">
+		<allowedRole name="Root Administrator" />
+		<allowedRole name="Workplace User" />
+	</action>
+	<action id="30">
+		<allowedUser name="Admin" />
+		<allowedGroup name="Projectmanagers" />
+		<allowedRole name="Workplace User" />
+	</action>
+</allowance>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="lib4build/activation.jar"/>
+	<classpathentry kind="lib" path="lib4build/antlr-2.7.5H3.jar"/>
+	<classpathentry kind="lib" path="lib4build/asm-attrs.jar"/>
+	<classpathentry kind="lib" path="lib4build/asm.jar"/>
+	<classpathentry kind="lib" path="lib4build/cglib-2.1_2jboss.jar"/>
+	<classpathentry kind="lib" path="lib4build/commons-logging-1.1.jar"/>
+	<classpathentry kind="lib" path="lib4build/dom4j-1.6.1.jar"/>
+	<classpathentry kind="lib" path="lib4build/hibernate-annotations.jar"/>
+	<classpathentry kind="lib" path="lib4build/hibernate-entitymanager.jar"/>
+	<classpathentry kind="lib" path="lib4build/hibernate3.jar"/>
+	<classpathentry kind="lib" path="lib4build/jaxb-api-2.1.jar"/>
+	<classpathentry kind="lib" path="lib4build/jaxb-impl-2.1.8.jar"/>
+	<classpathentry kind="lib" path="lib4build/jaxb-xjc.jar"/>
+	<classpathentry kind="lib" path="lib4build/jsp-api.jar"/>
+	<classpathentry kind="lib" path="lib4build/jta.jar"/>
+	<classpathentry kind="lib" path="lib4build/jug-lgpl-2.0.0.jar"/>
+	<classpathentry kind="lib" path="lib4build/log4j-1.2.14.jar"/>
+	<classpathentry kind="lib" path="lib4build/mail.jar"/>
+	<classpathentry kind="lib" path="lib4build/ManifestBuilder.jar"/>
+	<classpathentry kind="lib" path="lib4build/opencms.jar"/>
+	<classpathentry kind="lib" path="lib4build/org.opencms.workplace.administration.jar"/>
+	<classpathentry kind="lib" path="lib4build/org.opencms.workplace.tools.accounts.jar"/>
+	<classpathentry kind="lib" path="lib4build/servlet-api.jar"/>
+	<classpathentry kind="lib" path="lib4build/spring-test.jar"/>
+	<classpathentry kind="lib" path="lib4build/spring.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

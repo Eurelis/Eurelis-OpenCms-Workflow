@@ -1,0 +1,48 @@
+<opensymphony-user>
+
+<provider class="com.opensymphony.user.provider.jdbc.JDBCAccessProvider">
+<property name="user.table">OS_USER</property>
+<property name="group.table">OS_GROUP</property>
+<property name="membership.table">OS_MEMBERSHIP</property>
+<property name="user.name">USERNAME</property>
+<property name="user.password">PASSWORDHASH</property>
+<property name="user.firstname">FIRSTNAME</property>
+<property name="user.fullname">FULLNAME</property>
+<property name="user.email">EMAIL</property>
+<property name="group.name">GROUPNAME</property>
+<property name="membership.userName">USERNAME</property>
+<property name="membership.groupName">GROUPNAME</property>
+<property name="datasource">jdbc/opencms</property>
+</provider>
+
+<provider class="com.opensymphony.user.provider.jdbc.JDBCCredentialsProvider">
+<property name="user.table">OS_USER</property>
+<property name="group.table">OS_GROUP</property>
+<property name="membership.table">OS_MEMBERSHIP</property>
+<property name="user.name">USERNAME</property>
+<property name="user.password">PASSWORDHASH</property>
+<property name="group.name">GROUPNAME</property>
+<property name="user.fullname">FULLNAME</property>
+<property name="membership.userName">USERNAME</property>
+<property name="membership.groupName">GROUPNAME</property>
+<property name="datasource">jdbc/opencms</property>
+</provider>
+
+<provider class="com.opensymphony.user.provider.jdbc.JDBCProfileProvider">
+<property name="user.table">OS_USER</property>
+<property name="group.table">OS_GROUP</property>
+<property name="membership.table">OS_MEMBERSHIP</property>
+<property name="user.name">USERNAME</property>
+<property name="user.password">PASSWORDHASH</property>
+<property name="user.fullname">FULLNAME</property>
+<property name="user.lastname">LASTNAME</property>
+<property name="user.email">EMAIL</property>
+<property name="group.name">GROUPNAME</property>
+<property name="membership.userName">USERNAME</property>
+<property name="membership.groupName">GROUPNAME</property>
+<property name="datasource">jdbc/opencms</property>
+</provider>
+
+
+<authenticator class="com.opensymphony.user.authenticator.SmartAuthenticator" />
+</opensymphony-user>
