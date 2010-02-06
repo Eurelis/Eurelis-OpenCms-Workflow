@@ -1,0 +1,11 @@
+<explorertypes>
+     <explorertype name="workflowlist" key="fileicon.workflowlist" icon="xmlcontent.gif"
+    reference="xmlcontent">
+    <newresource page="structurecontent"
+      uri="newresource_xmlcontent.jsp?newresourcetype=workflowlist" order="245"
+      autosetnavigation="false" autosettitle="false" info="desc.workflowlist"/>
+    <accesscontrol>
+      <accessentry principal="GROUP.Administrators" permissions="+r+v+w+c"/>
+    </accesscontrol>
+  </explorertype>
+</explorertypes>

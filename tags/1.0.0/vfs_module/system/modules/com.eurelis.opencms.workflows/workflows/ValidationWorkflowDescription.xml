@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE workflow PUBLIC "-//OpenSymphony Group//DTD OSWorkflow 2.8//EN" "http://www.opensymphony.com/osworkflow/workflow_2_8.dtd">
+<workflow>
+
+
+	<initial-actions>
+		<action id="1" name="Start Workflow">
+			<results>
+				<unconditional-result id="5" old-status="Finished"
+					status="Queued" step="2" />
+			</results>
+		</action>
+	</initial-actions>
+	
+	<!-- ++++++++++++++++++++++++ -->
+	<!--      FIRST PART          -->
+	<!-- Before validation/reject -->
+	<!-- ++++++++++++++++++++++++ -->
+	
+	<steps>
+		<step id="2" name="workflowInitialized">
+			<pre-functions>
+				<function type="class">
+					<arg name="class.name">
+						com.eurelis.opencms.workflows.functions.JustFillPropertyFunction
+					</arg>
+				</function>
+			</pre-functions>
+			<actions>
+				<action id="51" name="collect resources" view="collect resources"
+					auto="true">
+					<results>
+						<unconditional-result id="52" old-status="Finished"
+							status="Queued" step="50" />
+					</results>
+				</action>
+			</actions>
+		</step>
+
+		<step id="50" name="resourcesCollected">
+			<pre-functions>
+				<function type="class">
+					<arg name="class.name">
+						com.eurelis.opencms.workflows.functions.SelectFileRecursivelyFunction
+					</arg>
+				</function>
+			</pre-functions>
+			<actions>
+				<action id="28" name="move resources to staging" view="lock resources"
+					auto="true">
+					<results>
+						<unconditional-result id="29" old-status="Finished"
+							status="Queued" step="30" />
+					</results>
+				</action>
+			</actions>
+		</step>
+
+
+		<step id="30" name="movedToStaging">
+			<pre-functions>
+				<function type="class">
+					<arg name="class.name">
+						com.eurelis.opencms.workflows.functions.MoveToProjectAndSetLockFunction
+					</arg>
+					<arg name="destination">Staging</arg>
+					<arg name="lockValue">true</arg>
+				</function>
+			</pre-functions>
+			<actions>
+				<action id="31" name="set rights to reviewer" view="set rights to reviewer"
+					auto="true">
+					<results>
+						<unconditional-result id="32" old-status="Finished"
+							status="Queued" step="100" />
+					</results>
+				</action>
+			</actions>
+		</step>
+		
+
+		<step id="100" name="rightsSet">
+			<pre-functions>
+				<function type="class">
+					<arg name="class.name">
+						com.eurelis.opencms.workflows.functions.ChangeAllowedPeopleFunction
+					</arg>
+					<arg name="changeToApply">
+						instance:u:author:r;property:u:reviewer:rw
+					</arg>
+				</function>
+			</pre-functions>
+			<actions>
+				<action id="101" name="send notification" view="send notification"
+					auto="true">
+					<results>
+						<unconditional-result id="102" old-status="Finished"
+							status="Queued" step="4" />
+					</results>
+				</action>
+			</actions>
+		</step>
+
+	
+	    <!-- +++++++++++ -->
+		<!--  PART TWO   -->
+		<!-- User Choice -->
+		<!-- +++++++++++ -->
+
+		<step id="4" name="notificationSent">
+			<pre-functions>
+				<function type="class">
+					<arg name="class.name">
+						com.eurelis.opencms.workflows.functions.EmailNotificationFunction
+					</arg>
+					<arg name="receivers">
+						opencms:reviewer
+					</arg>
+					<arg name="email_body">
+						Le(s) fichier(s) suivant vous ont été proposé à validation par [[creator]] : [[initialcomment]].
+					</arg>
+					<arg name="email_subject">
+						[Validation] Des fichiers sont en demande de validation.
+					</arg>
+				</function>
+			</pre-functions>
+			<actions>
+				<action id="11" name="Validate" view="Validate">
+					<results>
+						<unconditional-result id="12" old-status="Finished"
+							status="Queued" step="10" />
+					</results>
+				</action>
+				<action id="14" name="Reject" view="Reject">
+					<results>
+						<unconditional-result id="15" old-status="Finished"
+							status="Queued" step="13" />
+					</results>
+				</action>
+			</actions>
+		</step>
+
+		<!-- +++++++++++++++ -->
+		<!--  PART THIRD A   -->
+		<!-- validation : ok -->
+		<!-- +++++++++++++++ -->
+
+		<step id="10" name="validationOK">
+			<pre-functions>
+				<function type="class">
+					<arg name="class.name">
+						com.eurelis.opencms.workflows.functions.JustFillPropertyFunction
+					</arg>
+				</function>
+			</pre-functions>
+			<actions>
+				<action id="111" name="send notification to creator" view="send notification to creator"
+					auto="true">
+					<results>
+						<unconditional-result id="112" old-status="Finished"
+							status="Queued" step="110" />
+					</results>
+				</action>
+			</actions>			
+		</step>
+		
+		<step id="110" name="notificationSent">
+			<pre-functions>
+				<function type="class">
+					<arg name="class.name">
+						com.eurelis.opencms.workflows.functions.EmailNotificationFunction
+					</arg>
+					<arg name="receivers">
+						instance:author
+					</arg>
+					<arg name="email_body">
+						Le(s) fichier(s) que vous aviez proposés à soumission ont été validés par [[lastactor]] : [[lastcomment]].
+					</arg>
+					<arg name="email_subject">
+						[Validation] Vos fichiers ont été validés.
+					</arg>
+				</function>
+			</pre-functions>
+			<actions>
+				<action id="25" name="move resources to Offline project" view="move resources to Offline project"
+					auto="true">
+					<results>
+						<unconditional-result id="26" old-status="Finished"
+							status="Queued" step="40" />
+					</results>
+				</action>
+			</actions>
+		</step>
+		
+
+		<step id="40" name="resourceMovedToOfflineProject">
+			<pre-functions>
+				<function type="class">
+					<arg name="class.name">
+						com.eurelis.opencms.workflows.functions.MoveToProjectAndSetLockFunction
+					</arg>
+					<arg name="destination">Offline</arg>
+					<arg name="lockValue">false</arg>
+				</function>
+			</pre-functions>
+			<actions>
+				<action id="41" name="publish resources" view="publish Resource"
+					auto="true">
+					<results>
+						<unconditional-result id="42" old-status="Finished"
+							status="Queued" step="16" />
+					</results>
+				</action>
+			</actions>
+		</step>
+
+		<step id="16" name="resourcePublished">
+			<pre-functions>
+				<function type="class">
+					<arg name="class.name">
+						com.eurelis.opencms.workflows.functions.PublishResourcesFunction
+					</arg>
+				</function>
+			</pre-functions>
+			
+		</step>
+		
+		
+		
+		<!-- +++++++++++++++++++++++++ -->
+		<!--       PART THIRD B        -->
+		<!-- validation ko : rejection -->
+		<!-- +++++++++++++++++++++++++ -->
+		
+
+
+		<step id="13" name="validationKO">
+			<pre-functions>
+				<function type="class">
+					<arg name="class.name">
+						com.eurelis.opencms.workflows.functions.JustFillPropertyFunction
+					</arg>
+				</function>
+			</pre-functions>
+			<actions>
+				<action id="121" name="send notification to creator" view="send notification to creator"
+					auto="true">
+					<results>
+						<unconditional-result id="122" old-status="Finished"
+							status="Queued" step="120" />
+					</results>
+				</action>
+			</actions>			
+		</step>
+		
+		<step id="120" name="notificationSent">
+			<pre-functions>
+				<function type="class">
+					<arg name="class.name">
+						com.eurelis.opencms.workflows.functions.EmailNotificationFunction
+					</arg>
+					<arg name="receivers">
+						instance:author
+					</arg>
+					<arg name="email_body">
+						Le(s) fichier(s) que vous aviez proposés à soumission n'ont pas été validés par [[lastactor]] : [[lastcomment]].
+					</arg>
+					<arg name="email_subject">
+						[Validation] Vos fichiers n'ont pas été validés.
+					</arg>
+				</function>
+			</pre-functions>
+			<actions>
+				<action id="18" name="move resources to Offline project" view="move resources to Offline project"
+					auto="true">
+					<results>
+						<unconditional-result id="19" old-status="Finished"
+							status="Queued" step="17" />
+					</results>
+				</action>
+			</actions>
+		</step>
+		
+		
+		<step id="17" name="resourceMovedToOfflineProject">
+			<pre-functions>
+				<function type="class">
+					<arg name="class.name">
+						com.eurelis.opencms.workflows.functions.MoveToProjectAndSetLockFunction
+					</arg>
+					<arg name="destination">Offline</arg>
+					<arg name="lockValue">false</arg>
+				</function>
+			</pre-functions>
+		</step>
+
+	</steps>
+
+</workflow>

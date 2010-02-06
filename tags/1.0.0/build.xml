@@ -1,0 +1,197 @@
+<project name="OpenCMS - Workflows" default="compress" basedir=".">
+
+	<!-- *************************************************** -->
+	<!-- Les propriétées nécessaire pour le manifest builder -->
+	<!-- *************************************************** -->
+
+	<!-- ########### A COMPLETER AVANT EXECUTION ########### -->
+
+	<property name="module.info.creator" value="Admin" />
+	<!--la version d'OpenCms pour l'export/import-->
+	<property name="module.info.opencmsversion" value="7.0.5" />
+	<property name="module.info.project" value="Offline" />
+	<!--la version de la classe d'import d'OpenCms-->
+	<property name="module.info.exportversion" value="7" />
+	<property name="module.module.name" value="com.eurelis.opencms.workflows" />
+	<property name="module.module.nicename" value="Eurelis Workflows" />
+	<property name="module.module.group" value="OpenCms Workflows" />
+	<property name="module.module.moduleclass" value="com.eurelis.opencms.workflows.InitWorkflowAction" />
+	<property name="module.module.moduledescription" value="Eurelis Workflow Module. //// OpenCMS - Eurelis - EUR-FRAMEWORK : Module Common Portlets Copyright (C) Eurelis - http://www.eurelis.com This program is free software: you can redistribute it and/or modify it under the terms version 3 of the GNU Lesser General Public License as published by the Free Software Foundation. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the version 3 of the GNU Lesser General Public License for more details. You should have received a copy of the GNU Lesser General Public License along with this program. If not, see http://www.gnu.org/licenses/gpl-3.0.html." />
+	<property name="module.module.version" value="1.0.1" />
+	<property name="module.module.authorname" value="Eurelis" />
+	<property name="module.module.authoremail" value="contact@eurelis.com" />
+	<property name="module.module.userinstalled" value="" />
+	<property name="module.module.dateinstalled" value="" />
+	<property name="flag.uuids" value="false" />
+
+
+
+	<!-- ************************ -->
+	<!-- Les repertoires de bases -->
+	<!-- ************************ -->
+
+	<!-- le répertoire des sources -->
+	<property name="folder.src" value="src" />
+	<!-- le repertoire des classes compilées -->
+	<property name="folder.build" value="build" />
+	<!-- le repertoire des fichiers pour génération des manifest -->
+	<property name="folder.etc" value="etc" />
+	<!-- Le repertoire où sera créé le .ZIP du module -->
+	<property name="folder.module" value="module" />
+	<!-- Le repertoire où sera construit le module -->
+	<property name="folder.dist" value="dist" />
+
+
+	<!-- ******************************************** -->
+	<!-- Les repertoires pour la génération du module -->
+	<!-- ******************************************** -->
+
+	<!-- Le repertoire contenant l'arborescence vfs -->
+	<property name="folder.vfs" value="vfs_module" />
+
+	<!-- Le repertoire contenant les librairies de compilation -->
+	<property name="folder.lib.compil" value="${folder.etc}/complib" />
+
+	<!-- Le repertoire contenant les librairies à distribuer (necessaire aussi pour la compilation) -->
+	<property name="folder.lib.distrib" value="${folder.etc}/distlib" />
+
+	<!-- Le repertoire où seront copiés les librairies du module avant generation du zip -->
+	<property name="folder.module.generated.lib" value="${folder.dist}/system/modules/${module.module.name}/lib" />
+
+	<!-- Le repertoire où sont stockés les schémas xsd nécessaire à la création des parser JAXB -->
+	<property name="folder.module.generated.schemas" value="${folder.vfs}/system/modules/${module.module.name}/schemas" />
+
+
+	<!-- Les deux fichiers XML qui serviront de modèle pour les branches créant les -->
+	<!-- resourceTypes et les explorerTypes -->
+	<property name="file.resourcetypes" value="${folder.etc}/explorertypes.xml" />
+	<property name="file.explorertypes" value="${folder.etc}/resourcetypes.xml" />
+
+
+
+	<!-- *********************************** -->
+	<!-- Definition des taches particulieres -->
+	<!-- *********************************** -->
+
+
+	<!-- Tache de creation du manifest -->
+	<taskdef name="manifest" classname="com.eurelis.opencms.ant.task.ManifestBuilderTask">
+		<classpath>
+			<fileset dir="${folder.lib.compil}" includes="*.jar" />
+		</classpath>
+	</taskdef>
+
+	<!-- La tache de compilation JAXB -->
+	<taskdef name="xjc" classname="com.sun.tools.xjc.XJCTask">
+		<classpath>
+			<fileset dir="${folder.lib.compil}" includes="*.jar" />
+		</classpath>
+	</taskdef>
+
+
+	<!-- ################################################################################ -->
+	<!-- ################################################################################ -->
+	<!-- ########################   DEBUT CORPS SCRIPT  ################################# -->
+	<!-- ################################################################################ -->
+	<!-- ################################################################################ -->
+
+
+
+	<!-- ************************* -->
+	<!-- Définition des cibles ANT -->
+	<!-- ************************* -->
+
+	<!-- Efface des fichiers de travails -->
+	<target name="clean">
+		<delete dir="${folder.dist}" />
+		<delete dir="${folder.build}" />
+		<delete dir="${folder.module}" />
+	</target>
+
+	<!-- création de l'arborescence du module -->
+	<target name="createModuleTree" depends="clean">
+		<delete dir="${folder.dist}" />
+		<mkdir dir="${folder.dist}" />
+		<mkdir dir="${folder.module}" />
+
+		<copy todir="${folder.dist}">
+			<fileset dir="${folder.vfs}" excludes="**/__properties,**/__properties/**,**/__acl,**/__acl/**,**/*.class" />
+		</copy>
+
+		<copy todir="${folder.module.generated.lib}">
+			<fileset dir="${folder.lib.distrib}" />
+		</copy>
+	</target>
+
+
+	<!--LA TACHE PRINCIPALE, CONSTRUISANT LE MANIFEST-->
+	<target name="buildManifest" depends="createModuleTree,jar">
+		<!--l'appel de la tache, avec en attribut, toutes les propriétés déclarées avant-->
+		<manifest generateuuids="${flag.uuids}" distfolder="${folder.dist}" srcfolder="${folder.vfs}" resourcetypes="${file.resourcetypes}" explorertypes="${file.explorertypes}" creator="${module.info.creator}" opencmsversion="${module.info.opencmsversion}" project="${module.info.project}" exportversion="${module.info.exportversion}" name="${module.module.name}" nicename="${module.module.nicename}" group="${module.module.group}" moduleclass="${module.module.moduleclass}" moduledescription="${module.module.moduledescription}" version="${module.module.version}" authorname="${module.module.authorname}" authoremail="${module.module.authoremail}" userinstalled="${module.module.userinstalled}" dateinstalled="${module.module.dateinstalled}">
+			<!--Le corps de notre tache : l'endroit ideal pour déclarer des nested types !!!-->
+			<!-- On en distingue 4 types :-->
+			<!--Les POINTS D'EXPORTS-->
+			<!-- <exportpoint src="source" dst="destination"/> X répétitions possibles-->
+			<exportpoint src="/system/modules/${module.module.name}/classes/" dst="WEB-INF/classes/" />
+			<exportpoint src="/system/modules/${module.module.name}/lib/" dst="WEB-INF/lib/" />
+			<exportpoint src="/system/modules/${module.module.name}/config_osworkflow/" dst="WEB-INF/classes/" />
+			<exportpoint src="/system/modules/${module.module.name}/config_HibernateSpring/" dst="WEB-INF/classes/" />
+			<!-- exportpoint src="/system/modules/com.eurelis.opencms.workflows/resources/" dst="resources/"/ -->
+
+			<!--Les RESSOURCES DE MODULE-->
+			<resource uri="/system/modules/${module.module.name}" />
+			<resource uri="/system/workplace/views/workflows" />
+			<resource uri="/system/workplace/workflows" />
+			<resource uri="/system/workplace/resources/workflows" />
+
+			<!--Les PARAMETRES-->
+			<!-- <parameter name="nom" value='valeur'/> X répétitions possibles-->
+			<!--Les DEPENDANCES (vis a vis d'autres modules)-->
+			<!-- <dependency name="nomdumodule" version="1"/> X répétitions possibles-->
+
+			<!--Un dernier type : le pack de fichiers traités par le module-->
+			<fileset dir="${folder.dist}" excludes="**/__properties,**/__properties/**,**/__acl,**/__acl/**" />
+			<!--Ajouté en dur, cette description inclut tout le contenu du répertoire de source du
+					module, __properties mis à part ! -->
+
+		</manifest>
+	</target>
+
+	<!-- Tache de compilation -->
+	<path id="compil.classpath">
+		<fileset dir="${folder.lib.compil}" includes="*.jar" />
+		<fileset dir="${folder.lib.distrib}" includes="*.jar" />
+	</path>
+	<target name="compil" description="Compile the module" depends="jaxb">
+		<delete dir="${folder.build}" />
+		<mkdir dir="${folder.build}" />
+		<javac srcdir="${folder.src}" destdir="${folder.build}" classpathref="compil.classpath" />
+	</target>
+
+	<!-- Tache de creation du jar correspondant aux classes du module -->
+	<property name="file.jar" value="${folder.module.generated.lib}/${module.module.name}_${module.module.version}.jar" />
+	<target name="jar" description="Create the jar corresponding to compiled source" depends="compil,createModuleTree">
+		<jar destfile="${file.jar}">
+			<fileset dir="${folder.build}"/>
+		</jar>
+	</target>
+
+
+	<!-- Création des différents unmarshaller JAXB -->		
+	<target name="jaxb" description="Create JAXB Unmarshaller" depends="clean">
+		<xjc schema="${folder.module.generated.schemas}/allowance.xsd" destdir="src" package="com.eurelis.opencms.workflows.jaxb.workflowconfig" />
+		<xjc schema="${folder.module.generated.schemas}/listworkflow.xsd" destdir="src" package="com.eurelis.opencms.workflows.jaxb.listworkflow" />
+		<xjc schema="${folder.module.generated.schemas}/workflowPropertyContainer.xsd" destdir="src" package="com.eurelis.opencms.workflows.jaxb.workflowpropertycontainer" />
+	</target>
+
+
+	<!-- Une tâche qui crée le .ZIP -->
+	<property name="file.zip" value="${folder.module}/${module.module.name}_${module.module.version}.zip" />
+	<target name="compress" depends="jar,buildManifest">
+		<mkdir dir="${folder.dist}" />
+		<zip destfile="${file.zip}">
+			<zipfileset dir="${folder.dist}" excludes="**/__properties/**,**/__acl/**" />
+		</zip>
+	</target>
+
+</project>
