@@ -1,6 +1,0 @@
-<workflows>
-  <workflow name="mytest" type="resource" location="mySimpleWorkFlow.xml"/>
-  <workflow name="mytest2" type="resource" location="mySimpleWorkFlow.xml"/>
-  <workflow name="mytest3" type="resource" location="mySimpleWorkFlow.xml"/>
-</workflows>
-
