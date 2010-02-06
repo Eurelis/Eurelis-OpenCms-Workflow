@@ -1,0 +1,27 @@
+<!-- This file store the configuration specificities of the workflow "ValidationWorkflow.xml" -->
+<workflow name="ValidationWorkflow">
+	
+	<!-- The dynamic parameters required when starting the workflow -->
+	<!-- The dynamic parameters required when starting the workflow -->
+	<params>
+	
+		<!-- The type of the parameters is actually restricted to the Java primitive data type -->
+		<!-- Please be careful, the parser is case-sensitive  -->
+		<!-- The default field is the value that will be displayed  per default. -->
+		<!-- For boolean, is the default value is incorrect, the false value will be used.  -->
+		<!-- You can set a list of default value (will be presented in a Combobox) by separing each value with a "|" -->
+		<param name="receivers" type="String" display="Liste des destinataires"/>
+		
+	</params>
+		
+	
+	<!-- The rights associated to the current user per branches -->
+	<rights>			
+		
+		<!-- This particular branch must be declare to allows read/write/creation when a WF has no attached files -->
+		<branch path="NO_FILES">					
+				<allowRole name="Root administrator" type="cr"/>		
+		</branch>		
+			
+	</rights>
+</workflow>

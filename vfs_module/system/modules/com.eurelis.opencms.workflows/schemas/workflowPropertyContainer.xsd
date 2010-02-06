@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+ <xs:element name="allowedGroup">
+    <xs:complexType>
+      <xs:attribute name="name" type="xs:string" use="required" />
+      <xs:attribute name="type" type="xs:string" use="required" />
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="allowedRole">
+    <xs:complexType>
+      <xs:attribute name="name" type="xs:string" use="required" />
+      <xs:attribute name="type" type="xs:string" use="required" />
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="allowedUser">
+    <xs:complexType>
+      <xs:attribute name="name" type="xs:string" use="required" />
+      <xs:attribute name="type" type="xs:string" use="required" />
+    </xs:complexType>
+  </xs:element>
+
+
+  <xs:element name="allowedPeople">
+    <xs:complexType>
+      <xs:choice>
+        <xs:element ref="allowedGroup" maxOccurs="unbounded"/>
+        <xs:element ref="allowedRole" maxOccurs="unbounded"/>
+        <xs:element ref="allowedUser" maxOccurs="unbounded"/>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+ 
+
+  <xs:element name="associatedFiles">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="file" maxOccurs="unbounded" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="elements">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="WorkflowPropertyContainerElement" maxOccurs="unbounded" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="file">
+    <xs:complexType>
+      <xs:attribute name="path" type="xs:string" use="required" />
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="Parameter">
+    <xs:complexType>
+      <xs:attribute name="displayName" type="xs:string" use="required" />
+      <xs:attribute name="name" type="xs:string" use="required" />
+      <xs:attribute name="type" type="xs:string" use="required" />
+      <xs:attribute name="value" type="xs:string" use="required" />
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="parameters">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="Parameter" maxOccurs="unbounded" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="WorkflowPropertyContainer">
+    <xs:complexType>
+      <xs:choice>
+        <xs:element ref="parameters" />
+        <xs:element ref="associatedFiles" />
+        <xs:element ref="elements" />
+        <xs:element ref="allowedPeople" />        
+      </xs:choice>
+      <xs:attribute name="workflowInstanceName" type="xs:string" use="required" />
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="WorkflowPropertyContainerElement">
+    <xs:complexType>
+      <xs:attribute name="actionName" type="xs:string" use="required" />
+      <xs:attribute name="actionDate" type="xs:string" use="required" />
+      <xs:attribute name="cmsUserUUID" type="xs:string" use="required" />
+      <xs:attribute name="isAutoExecuted" type="xs:string" use="required" />
+      <xs:attribute name="comment" type="xs:string" use="required" />
+    </xs:complexType>
+  </xs:element>
+
+</xs:schema>

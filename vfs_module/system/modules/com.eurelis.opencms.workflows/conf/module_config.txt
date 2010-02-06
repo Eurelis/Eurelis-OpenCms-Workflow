@@ -1,0 +1,58 @@
+################################################################
+############## WORKFLOW MODULE CONFIGURATION FILE ##############
+################################################################
+################################################################
+
+#### This file allows to configure the main property of the workflow module
+#### The language used is nameOfTheProperty = valueOfTheProperty
+#### '#' indicates comments
+#### empty line are ignored
+
+
+
+###############################
+# Main configuration variable #
+###############################
+
+
+# The name of the type of file where information about available workflows are describe
+WORKLFOWLIST_TYPE = workflowlist
+	
+# The string that starts the description of a Pattern
+PATTERN_STARTING_SUBSTRING = {
+	
+# The string that ends the description of a Pattern
+PATTERN_ENDING_SUBSTRING = }	
+
+# The separator use in the workflow right config file to separate the list of default values.
+WORKFLOW_RIGHTCONFIGFILE_PARAMETER_SEPARATOR = ;
+	
+# The name of the class to load as Available Workflow Collector
+AVAILABLEWORKFLOWCOLLECTOR_CLASSNAME = com.eurelis.opencms.workflows.workflows.availableworkflows.AvailableWorkflowCollector
+	
+# The name of the class to load as OSWorkflowManager
+OSWORKFLOWMANAGER_CLASSNAME = com.eurelis.opencms.workflows.workflows.OSWorkflowManagerWithDynamicRightManagement
+
+# The path where the search of "workflowlist" files will starts from
+WORKFLOWLIST_CONFIGFILE_FOLDER = /system/modules/com.eurelis.opencms.workflows/workflows/
+
+
+
+#####################################
+# Additional configuration variable #
+#####################################
+
+### Be careful :
+###    By modifying those variables you may inactive the parsers used by the module
+
+# The context of the jaxb parser for file of type workflowlist
+PARSER_JAXBCONTEXT_LISTWORKFLOW = com.eurelis.opencms.workflows.jaxb.listworkflow
+		
+# The context of the jaxb parser for file storing the configuration/rights associated to a workflow 
+PARSER_JAXBCONTEXT_WORKFLOWCONFIG = com.eurelis.opencms.workflows.jaxb.workflowconfig
+	
+# The context of the jaxb parser for file storing the information associated to an instance of workflow (stored in the db)
+PARSER_JAXBCONTEXT_WORKFLOWPROPERTYCONTAINER = com.eurelis.opencms.workflows.jaxb.workflowpropertycontainer
+	
+	
+
