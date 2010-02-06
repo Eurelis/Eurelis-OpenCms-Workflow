@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:element name="allowGroup">
+		<xs:complexType>
+			<xs:attribute name="name" type="xs:string" use="required" />
+			<xs:attribute name="type" type="xs:string"
+				use="required" />			
+		</xs:complexType>
+	</xs:element>
+
+	<xs:simpleType name="workflowParameterType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="String" />
+			<xs:enumeration value="int" />
+			<xs:enumeration value="float" />
+			<xs:enumeration value="long" />
+			<xs:enumeration value="double" />
+			<xs:enumeration value="boolean" />
+			<xs:enumeration value="byte" />
+			<xs:enumeration value="short" />
+			<xs:enumeration value="char" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:element name="allowRole">
+		<xs:complexType>
+			<xs:attribute name="name" type="xs:string" use="required" />
+			<xs:attribute name="type" type="xs:string" use="required" />
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="allowUser">
+		<xs:complexType>
+			<xs:attribute name="name" type="xs:string" use="required" />
+			<xs:attribute name="type" type="xs:string" use="required" />
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="branch">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="allowGroup" maxOccurs="unbounded" />
+				<xs:element ref="allowRole" maxOccurs="unbounded" />
+				<xs:element ref="allowUser" maxOccurs="unbounded" />
+			</xs:sequence>
+			<xs:attribute name="path" type="xs:string" use="required" />
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="param">
+		<xs:complexType>
+			<xs:attribute name="name" type="xs:string" use="required" />
+			<xs:attribute name="type" type="workflowParameterType" use="required" />
+			<xs:attribute name="display" type="xs:string" use="required" />
+			<xs:attribute name="default" type="xs:string" use="optional" />
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="params">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="param" maxOccurs="unbounded" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="rights">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="branch" maxOccurs="unbounded" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="workflow">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="params" />
+				<xs:element ref="rights" />
+			</xs:sequence>
+			<xs:attribute name="name" type="xs:string" use="required" />
+		</xs:complexType>
+	</xs:element>
+
+</xs:schema>

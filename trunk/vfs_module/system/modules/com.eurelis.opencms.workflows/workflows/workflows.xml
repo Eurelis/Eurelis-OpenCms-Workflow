@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ListWorkflowTypes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="opencms://system/modules/com.eurelis.opencms.workflows/schemas/listOfWorkflows.xsd">
+  <ListWorkflowType language="fr">
+    <Instance>
+      <Title><![CDATA[Workflow test]]></Title>
+      <Description name="Description0">
+        <links/>
+        <content><![CDATA[<p>Workflow de démontration de l'écran d'instanciation des workflows</p>
+<p>=&gt; Ne fait rien</p>]]></content>
+      </Description>
+      <WorkflowFile>
+        <link type="WEAK">
+          <target><![CDATA[/system/modules/com.eurelis.opencms.workflows/workflows/MySimpleWorkFlowDescription.xml]]></target>
+          <uuid>21768fb8-2b36-11de-8561-25bd2f67b8a4</uuid>
+        </link>
+      </WorkflowFile>
+      <RightsFile>
+        <link type="WEAK">
+          <target><![CDATA[/system/modules/com.eurelis.opencms.workflows/workflows/MySimpleWorkflowConfig.xml]]></target>
+          <uuid>217900ba-2b36-11de-8561-25bd2f67b8a4</uuid>
+        </link>
+      </RightsFile>
+    </Instance>
+    <Instance>
+      <Title><![CDATA[Workflow de validation]]></Title>
+      <Description name="Description0">
+        <links/>
+        <content><![CDATA[<p>Workflow de validation basique.</p>
+<p>Une fois le workflow créé, les fichiers sont mis dans le projet &quot;Staging&quot;.<br />
+Les personnes indiquées dans le fichier de workflow,<br />
+plus celui dont le login est noté dans &quot;reviewer&quot; sont notifiées.</p>
+<p>L'une des personnes autorisée doit alors Valider/Refuser la tâche faite.</p>
+<p>Si les fichiers sont validés, alors ces fichiers sont publiés, sinon, ils sont remis<br />
+dans le projet Offline.</p>]]></content>
+      </Description>
+      <WorkflowFile>
+        <link type="WEAK">
+          <target><![CDATA[/system/modules/com.eurelis.opencms.workflows/workflows/ValidationWorkflowDescription.xml]]></target>
+          <uuid>217900bc-2b36-11de-8561-25bd2f67b8a4</uuid>
+        </link>
+      </WorkflowFile>
+      <RightsFile>
+        <link type="WEAK">
+          <target><![CDATA[/system/modules/com.eurelis.opencms.workflows/workflows/ValidationWorkflowsConfig.xml]]></target>
+          <uuid>217b4aae-2b36-11de-8561-25bd2f67b8a4</uuid>
+        </link>
+      </RightsFile>
+    </Instance>
+    <Instance>
+      <Title><![CDATA[Tache]]></Title>
+      <Description name="Description0">
+        <links/>
+        <content><![CDATA[<p>Workflow d'assignation de tâche</p>
+<p>Ce workflow permet d'attribuer une tâche à faire à un ensemble de destinataire.<br />
+Dès qu'un de ces destinataires accepte la tâche, les autres ne peuvent plus <br />
+l'accepter. L'action est ensuite faite ou pas par destinataire qui a pris la <br />
+responsabilité de la tâche.</p>
+<p>Une fois la tâche faite, le createur peut la valider, l'annuler ou encore la réallouer.</p>
+<p>Des emails de notification sont envoyés à chaque étape du processus.</p>
+<p>&nbsp;</p>]]></content>
+      </Description>
+      <WorkflowFile>
+        <link type="WEAK">
+          <target><![CDATA[/system/modules/com.eurelis.opencms.workflows/workflows/BasicTaskWorkflowDescription.xml]]></target>
+          <uuid>21741eb6-2b36-11de-8561-25bd2f67b8a4</uuid>
+        </link>
+      </WorkflowFile>
+      <RightsFile>
+        <link type="WEAK">
+          <target><![CDATA[/system/modules/com.eurelis.opencms.workflows/workflows/BasicTaskWorkflowConfig.xml]]></target>
+          <uuid>2171d4c4-2b36-11de-8561-25bd2f67b8a4</uuid>
+        </link>
+      </RightsFile>
+    </Instance>
+  </ListWorkflowType>
+</ListWorkflowTypes>

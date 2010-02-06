@@ -1,0 +1,143 @@
+
+
+
+function mySubmitAction(actionValue, theForm, formName, divToDisplay) {
+	if(checkForm(divToDisplay) && checkWorkflowInstanceName()){
+		return submitAction(actionValue, theForm, formName);
+	}else return false;
+}
+
+function checkWorkflowInstanceName(){
+	var element = document.getElementById('instancename');
+	if(element.value==""){
+		alert("Please give a name to your instance of workflow !");
+		oldColor = element.style.borderColor;
+		element.style.borderColor='#FF0000';
+		updaterequired = true;
+		componentToUpdate = element.id;
+		return false;
+	}
+	return true;
+}
+
+function checkForm(divToDisplay){
+	
+	var children = document.getElementById(divToDisplay).getElementsByTagName('*');
+	var i;
+	for (i=0;i<children.length;i++)
+ 	{
+ 		var child = children[i];
+ 
+ 		switch(child.type) {
+        case "text":		 
+		 	if(child.value==""){
+				alert( "Please Complete all fields" );
+				oldColor = child.style.borderColor;
+				child.style.borderColor='#FF0000';
+				updaterequired = true;
+				componentToUpdate = child.id;
+				return false;
+		 	}else{
+		 		if(!checkValue(child)){
+		 			oldColor = child.style.borderColor;
+					child.style.borderColor='#FF0000';
+					updaterequired = true;
+					componentToUpdate = child.id;
+					return false;					
+		 		}
+		 	}			
+		 	break;
+        case "textarea":
+        case "button":
+        case "reset":
+        case "submit":
+        case "file":
+        case "hidden":
+        case "password":
+        case "image":
+        case "radio":
+        case "checkbox":		
+        case "select-one":
+        case "select-multiple":
+		default:
+        }
+ 	}
+	return true;
+}
+
+function checkValue(element){
+	var att = element.getAttribute("paramType");	
+	switch(att){
+		case int_constant:
+		case double_constant:
+		case float_constant:
+		case long_constant:
+		case short_constant:
+		case byte_constant:
+			if(isNaN(element.value)){
+				alert("Please enter a number");
+				return false;
+			}else return true;
+		case char_constant:
+			if(element.value.length>1){
+				alert("Please enter a character");
+				return false
+			}
+			return true;
+		case string_constant:
+			return true;
+		case boolean_constant:
+			return true;
+		default:
+			return true;
+	}
+}
+
+var oldColor;
+var updaterequired = false;
+var componentToUpdate = null;
+
+function resetStyle(element){	
+	if(updaterequired && componentToUpdate == element.id){
+		element.style.borderColor=oldColor;
+		element.value = "";
+		updaterequired = false;
+		componentToUpdate = null;
+	}
+}
+
+function addNewInput(element,imagePath){
+	var tbl = document.getElementById(element);
+  var lastRow = tbl.rows.length;
+  // if there's no header row in the table, then iteration = lastRow + 1
+  var iteration = lastRow;
+  var row = tbl.insertRow(lastRow);
+  
+  // label cell
+  var cellLeft = row.insertCell(0);
+  cellLeft.innerHTML = labelToDisplayForInput; 
+  cellLeft.width = '15%';  
+  
+  var inputName = 'resourcelist_filepath_' + iteration;
+  
+  //table with input cell
+  var cellRight = row.insertCell(1);   
+  var el = document.createElement('input');
+  el.type = 'text';
+  el.name = 'resourcelist';
+  el.id = inputName;
+  el.setAttribute('style','width:100%;');
+  cellRight.appendChild(el);
+   
+  // button cell
+  var buttonCell = row.insertCell(2);
+  buttonCell.width = '5%';
+  var html = '<a href="#" onclick="javascript:top.openTreeWin(\'copy\',\'true\',\'main\',\''+inputName+'\', document);return false;" class="button" title="Search"><span unselectable="on" class="norm" onmouseover="className=\'over\'" onmouseout="className=\'norm\'" onmousedown="className=\'push\'" onmouseup="className=\'over\'"> <img class="button" src="'+imagePath+'" alt="Search"></span></a>';
+  buttonCell.innerHTML = html;
+}
+
+
+
+
+
+

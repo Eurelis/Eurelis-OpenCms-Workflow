@@ -1,0 +1,455 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE workflow PUBLIC "-//OpenSymphony Group//DTD OSWorkflow 2.8//EN" "http://www.opensymphony.com/osworkflow/workflow_2_8.dtd">
+<workflow>
+
+
+	<initial-actions>
+		<action id="1" name="Start Workflow">
+			<results>
+				<unconditional-result id="201" old-status="Finished"
+					status="Queued" step="10" />
+			</results>
+		</action>
+	</initial-actions>
+
+	<steps>
+
+
+		<!-- +++++++++++++++++++++++++ -->
+		<!--       FIRST PART          -->
+		<!-- Before acceptation/reject -->
+		<!-- +++++++++++++++++++++++++ -->
+
+
+		<step id="10" name="StartTask">
+			<pre-functions>
+				<function type="class">
+					<arg name="class.name">
+						com.eurelis.opencms.workflows.functions.JustFillPropertyFunction
+					</arg>
+				</function>
+			</pre-functions>
+			<actions>
+				<action id="212" name="SetNextUserRight1" view="Set rights on receivers"
+					auto="true">
+					<results>
+						<unconditional-result id="222" old-status="Finished"
+							status="Queued" step="20" />
+					</results>
+				</action>
+			</actions>
+		</step>
+
+		<step id="20" name="NextUserRightsSet">
+			<pre-functions>
+				<function type="class">
+					<arg name="class.name">
+						com.eurelis.opencms.workflows.functions.ChangeAllowedPeopleFunction
+					</arg>
+					<arg name="changeToApply">
+						instance:u:author:r;parameter:u:receivers:rw
+					</arg>
+				</function>
+			</pre-functions>
+			<actions>
+				<action id="211" name="SendNotification1" view="Send Notification to receivers"
+					auto="true">
+					<results>
+						<unconditional-result id="221" old-status="Finished"
+							status="Queued" step="30" />
+					</results>
+				</action>
+			</actions>
+		</step>
+
+		<step id="30" name="NotificationSent">
+			<pre-functions>
+				<function type="class">
+					<arg name="class.name">
+						com.eurelis.opencms.workflows.functions.EmailNotificationFunction
+					</arg>
+					<arg name="receivers">
+						parameter:receivers
+					</arg>
+					<arg name="email_body">
+						[[creator]] vous a proposé une nouvelle tâche : [[initialcomment]]
+					</arg>
+					<arg name="email_subject">
+						[Tache] une nouvelle tache vous a été proposé.
+					</arg>
+				</function>
+			</pre-functions>
+			<actions>
+				<action id="251" name="AcceptTask" view="Accept task">
+					<results>
+						<unconditional-result id="261" old-status="Finished"
+							status="Queued" step="40" />
+					</results>
+				</action>
+				<action id="271" name="RejectTask" view="Reject task">
+					<results>
+						<unconditional-result id="281" old-status="Finished"
+							status="Queued" step="50" />
+					</results>
+				</action>
+			</actions>
+		</step>
+
+
+		<!-- +++++++++++++++++++++++++ -->
+		<!--       SECOND PART A       -->
+		<!--       Task accepted       -->
+		<!-- +++++++++++++++++++++++++ -->
+
+
+		<step id="40" name="TaskAccepted">
+			<pre-functions>
+				<function type="class">
+					<arg name="class.name">
+						com.eurelis.opencms.workflows.functions.JustFillPropertyFunction
+					</arg>
+				</function>
+			</pre-functions>
+			<actions>
+				<action id="291" name="SetNextUserRights2" view="Deny rights to other receivers"
+					auto="true">
+					<results>
+						<unconditional-result id="301" old-status="Finished"
+							status="Queued" step="170" />
+					</results>
+				</action>
+			</actions>
+		</step>
+
+		<step id="170" name="NextUserRightsSet">
+			<pre-functions>
+				<function type="class">
+					<arg name="class.name">
+						com.eurelis.opencms.workflows.functions.ChangeAllowedPeopleFunction
+					</arg>
+					<arg name="changeToApply">
+						parameter:u:receivers:r;instance:u:author:r;instance:u:lastactor:rw
+					</arg>
+				</function>
+			</pre-functions>
+			<actions>
+				<action id="213" name="SendNotification2" view="Send Notification to creator"
+					auto="true">
+					<results>
+						<unconditional-result id="223" old-status="Finished"
+							status="Queued" step="60" />
+					</results>
+				</action>
+			</actions>
+		</step>
+
+		<step id="60" name="NotificationSent">
+			<pre-functions>
+				<function type="class">
+					<arg name="class.name">
+						com.eurelis.opencms.workflows.functions.EmailNotificationFunction
+					</arg>
+					<arg name="receivers">
+						instance:author
+					</arg>
+					<arg name="email_body">
+						La tâche que vous avez affectée a été acceptée par [[lastlastactor]] : [[lastlastcomment]]
+					</arg>
+					<arg name="email_subject">
+						[Tache] une tache a été acceptée
+					</arg>
+				</function>
+			</pre-functions>
+			<actions>
+				<action id="331" name="ActionDone" view="Task done">
+					<results>
+						<unconditional-result id="341" old-status="Finished"
+							status="Queued" step="100" />
+					</results>
+				</action>
+				<action id="351" name="ActionNotDone" view="Task not done">
+					<results>
+						<unconditional-result id="361" old-status="Finished"
+							status="Queued" step="130" />
+					</results>
+				</action>
+			</actions>
+		</step>
+
+		<!-- ++++++++++++++++++++++++++++++++++++++++ -->
+		<!--              SECOND PART A 1             -->
+		<!--       Task accepted and action done      -->
+		<!-- ++++++++++++++++++++++++++++++++++++++++ -->
+
+		<step id="100" name="TaskDone">
+			<pre-functions>
+				<function type="class">
+					<arg name="class.name">
+						com.eurelis.opencms.workflows.functions.JustFillPropertyFunction
+					</arg>
+				</function>
+			</pre-functions>
+			<actions>
+				<action id="391" name="SendNotification3" view="Send notification to creator"
+					auto="true">
+					<results>
+						<unconditional-result id="401" old-status="Finished"
+							status="Queued" step="70" />
+					</results>
+				</action>
+			</actions>
+		</step>
+
+		<step id="70" name="NotificationSent">
+			<pre-functions>
+				<function type="class">
+					<arg name="class.name">
+						com.eurelis.opencms.workflows.functions.EmailNotificationFunction
+					</arg>
+					<arg name="receivers">
+						instance:author
+					</arg>
+					<arg name="email_body">
+						La tâche que vous avez affectée a été réalisée par [[lastactor]] : [[lastcomment]]
+					</arg>
+					<arg name="email_subject">
+						[Tache] une tache a été réalisée
+					</arg>
+				</function>
+			</pre-functions>
+			<actions>
+				<action id="371" name="SetNextUserRights3" view="Set rights to creator"
+					auto="true">
+					<results>
+						<unconditional-result id="381" old-status="Finished"
+							status="Queued" step="110" />
+					</results>
+				</action>
+			</actions>
+		</step>
+
+		<step id="110" name="RightsSet">
+			<pre-functions>
+				<function type="class">
+					<arg name="class.name">
+						com.eurelis.opencms.workflows.functions.ChangeAllowedPeopleFunction
+					</arg>
+					<arg name="changeToApply">
+						parameter:u:receivers:r;instance:u:author:rw
+					</arg>
+				</function>
+			</pre-functions>
+			<actions>
+				<action id="411" name="CancelTask" view="Cancel task">
+					<results>
+						<unconditional-result id="421" old-status="Finished"
+							status="Queued" step="80" />
+					</results>
+				</action>
+				<action id="421" name="RealocateTask" view="Realocate task">
+					<results>
+						<unconditional-result id="431" old-status="Finished"
+							status="Queued" step="120" />
+					</results>
+				</action>
+				<action id="422" name="ValidateTask" view="Validate task">
+					<results>
+						<unconditional-result id="432" old-status="Finished"
+							status="Queued" step="160" />
+					</results>
+				</action>
+			</actions>
+		</step>
+
+
+		<!-- ++++++++++++++++++++++++++++++++++++++++ -->
+		<!--              SECOND PART A 2             -->
+		<!--    Task accepted but action  not done    -->
+		<!-- ++++++++++++++++++++++++++++++++++++++++ -->
+
+		<step id="130" name="TaskNotDone">
+			<pre-functions>
+				<function type="class">
+					<arg name="class.name">
+						com.eurelis.opencms.workflows.functions.JustFillPropertyFunction
+					</arg>
+				</function>
+			</pre-functions>
+			<actions>
+				<action id="451" name="SendNotification4" view="Send notification to creator"
+					auto="true">
+					<results>
+						<unconditional-result id="461" old-status="Finished"
+							status="Queued" step="180" />
+					</results>
+				</action>
+			</actions>
+		</step>
+
+		<step id="180" name="NotificationSent">
+			<pre-functions>
+				<function type="class">
+					<arg name="class.name">
+						com.eurelis.opencms.workflows.functions.EmailNotificationFunction
+					</arg>
+					<arg name="receivers">
+						instance:author
+					</arg>
+					<arg name="email_body">
+						La tâche que vous avez affectée n'a pas été réalisée par [[lastactor]] : [[lastcomment]]
+					</arg>
+					<arg name="email_subject">
+						[Tache] une tache n'a pas été réalisée
+					</arg>
+				</function>
+			</pre-functions>
+			<actions>
+				<action id="372" name="SetNextUserRights6" view="Set rights to creator"
+					auto="true">
+					<results>
+						<unconditional-result id="382" old-status="Finished"
+							status="Queued" step="110" />
+					</results>
+				</action>
+			</actions>
+		</step>
+
+
+		<!-- +++++++++++++++++++++++++ -->
+		<!--       SECOND PART B       -->
+		<!--       Task rejected       -->
+		<!-- +++++++++++++++++++++++++ -->
+
+		<step id="50" name="TaskRejected">
+			<pre-functions>
+				<function type="class">
+					<arg name="class.name">
+						com.eurelis.opencms.workflows.functions.JustFillPropertyFunction
+					</arg>
+				</function>
+			</pre-functions>
+			<actions>
+				<action id="311" name="SendNotification5" view="Send notification to creator"
+					auto="true">
+					<results>
+						<unconditional-result id="321" old-status="Finished"
+							status="Queued" step="140" />
+					</results>
+				</action>
+			</actions>
+		</step>
+
+		<step id="140" name="NotificationSent">
+			<pre-functions>
+				<function type="class">
+					<arg name="class.name">
+						com.eurelis.opencms.workflows.functions.EmailNotificationFunction
+					</arg>
+					<arg name="receivers">
+						instance:author
+					</arg>
+					<arg name="email_body">
+						La tâche que vous avez affectée a été refusée par [[lastactor]] : [[lastcomment]]
+					</arg>
+					<arg name="email_subject">
+						[Tache] une tache a été refusée
+					</arg>
+				</function>
+			</pre-functions>
+			<actions>
+				<action id="471" name="SetNextUserRights4" view="Set rights to creator"
+					auto="true">
+					<results>
+						<unconditional-result id="481" old-status="Finished"
+							status="Queued" step="150" />
+					</results>
+				</action>
+			</actions>
+		</step>
+
+		<step id="150" name="RightsSet">
+			<pre-functions>
+				<function type="class">
+					<arg name="class.name">
+						com.eurelis.opencms.workflows.functions.ChangeAllowedPeopleFunction
+					</arg>
+					<arg name="changeToApply">
+						parameter:u:receivers:r;instance:u:author:rw
+					</arg>
+				</function>
+			</pre-functions>
+			<actions>
+				<action id="512" name="CancelTask" view="Cancel task">
+					<results>
+						<unconditional-result id="522" old-status="Finished"
+							status="Queued" step="80" />
+					</results>
+				</action>
+				<action id="532" name="RealocateTask" view="Realocate task">
+					<results>
+						<unconditional-result id="542" old-status="Finished"
+							status="Queued" step="120" />
+					</results>
+				</action>
+			</actions>
+		</step>
+
+
+		<!-- +++++++++++++++++++++++++ -->
+		<!--        THIRD PART A       -->
+		<!--       Task cancelled      -->
+		<!-- +++++++++++++++++++++++++ -->
+
+		<step id="80" name="TaskCancelled">
+			<pre-functions>
+				<function type="class">
+					<arg name="class.name">
+						com.eurelis.opencms.workflows.functions.JustFillPropertyFunction
+					</arg>
+				</function>
+			</pre-functions>
+		</step>
+
+		<!-- +++++++++++++++++++++++++ -->
+		<!--        THIRD PART B       -->
+		<!--       Task Validated      -->
+		<!-- +++++++++++++++++++++++++ -->
+
+		<step id="160" name="TaskValidated">
+			<pre-functions>
+				<function type="class">
+					<arg name="class.name">
+						com.eurelis.opencms.workflows.functions.JustFillPropertyFunction
+					</arg>
+				</function>
+			</pre-functions>
+		</step>
+
+
+		<!-- +++++++++++++++++++++++++ -->
+		<!--        THIRD PART C       -->
+		<!--       Task Realocated     -->
+		<!-- +++++++++++++++++++++++++ -->
+
+		<step id="120" name="TaskRealocated">
+			<pre-functions>
+				<function type="class">
+					<arg name="class.name">
+						com.eurelis.opencms.workflows.functions.JustFillPropertyFunction
+					</arg>
+				</function>
+			</pre-functions>
+			<actions>
+				<action id="441" name="SetNextUserRight5" view="Set rights on receivers"
+					auto="true">
+					<results>
+						<unconditional-result id="451" old-status="Finished"
+							status="Queued" step="20" />
+					</results>
+				</action>
+			</actions>
+		</step>
+
+
+	</steps>
+</workflow>
