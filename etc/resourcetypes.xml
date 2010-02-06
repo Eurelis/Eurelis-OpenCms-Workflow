@@ -1,0 +1,9 @@
+<resourcetypes>
+   
+  <type class="org.opencms.file.types.CmsResourceTypeXmlContent" name="workflowlist"
+    id="245">    
+    <param name="schema">
+      /system/modules/com.eurelis.opencms.workflows/schemas/listOfWorkflows.xsd</param>
+  </type>
+  
+</resourcetypes>

@@ -1,0 +1,62 @@
+<!-- Cette entête obligatoire définie l'URL du schémas xsd qui validera la page, ainsi que namespace global de la page. -->
+<!-- Cette ligne est identique pour l'ensemble des fichier XSD OpenCMS. -->
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	elementFormDefault="qualified">
+
+	<!-- Définitions des schémas XSD utilisés dans la suite du fichier. -->
+	<!-- La ligne ci-dessous est le minimum requis puisqu'elle réfère le schémas des objets de réference OpenCMS. -->
+	<xsd:include schemaLocation="opencms://opencms-xmlcontent.xsd" />
+
+	<!-- Le nom de l'élément qui sera utilisé comme élément racine quand un nouvel élément sera ajouté -->
+	<!-- /!\/!\ ATTENTION /!\/!\ Le format de cette ligne est strict et de la forme : <xsd:element name="[NAME]s" type="OpenCms[NAME]s"/>  -->
+	<xsd:element name="ListWorkflowTypeElements"
+		type="OpenCmsListWorkflowTypeElements" />
+
+	<!-- Définition du type de l'élément racine et de ses principales caractéristique -->
+	<!-- /!\/!\ ATTENTION /!\/!\ Le format de cette section est toujours aussi  strict et de la forme : <xsd:element name="[NAME]" type="OpenCms[NAME]"/> -->
+	<xsd:complexType name="OpenCmsListWorkflowTypeElements">
+		<xsd:sequence>
+			<xsd:element name="ListWorkflowTypeElement"
+				type="OpenCmsListWorkflowTypeElement" minOccurs="0"
+				maxOccurs="unbounded" />
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<!-- La définition des différentes parties qui compose l'élément -->
+	<!-- L'attribut type de chaque champs définis peut faire partie de la liste des type de champs par défaut d'OpenCMS (Content type par défaut) -->
+	<!-- ou faire référence type définie dans un autre schéma XSD -->
+	<xsd:complexType name="OpenCmsListWorkflowTypeElement">
+		<xsd:sequence>
+			<xsd:element name="Title" type="OpenCmsString" />
+			<xsd:element name="Description" type="OpenCmsHtml" />
+			<xsd:element name="WorkflowFile" type="OpenCmsVfsFile" />
+			<xsd:element name="RightsFile" type="OpenCmsVfsFile" />
+		</xsd:sequence>
+
+		<!-- Pour tout type complexe définie, il est nécessaire de définir la locale utilisée -->
+		<xsd:attribute name="language" type="OpenCmsLocale"
+			use="optional" />
+	</xsd:complexType>
+
+
+	<!-- La section des annotations est optionnelle, mais permet d'ajouter des informations supplémentaires nécessaires à Open-CMS -->
+	<!-- telle que les définitions de layout ou de mapping -->
+	<xsd:annotation>
+		<xsd:appinfo>
+			<resourcebundle name="com.eurelis.opencms.workflows.workplace"/>
+
+		
+			<!-- Règles de validations pour les champs (certains ne doivent pas êtres vide) -->
+			<validationrules>
+				<rule element="Title" regex="^[A-Za-z0-9_ ]+$"
+					type="error" message="${key.rule.errormessage.notitle|${validation.path}}" />
+				<rule element="WorkflowFile" regex="^.+$" type="error"
+					message="${key.rule.errormessage.nodescriptionfile|${validation.path}}" />
+				<rule element="RightsFile" regex="^.+$" type="error"
+					message="${key.rule.errormessage.norightsfile|${validation.path}}" />
+			</validationrules>
+		</xsd:appinfo>
+	</xsd:annotation>
+
+
+</xsd:schema>
