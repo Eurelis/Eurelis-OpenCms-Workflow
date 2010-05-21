@@ -32,7 +32,7 @@
 		<!-- Priority is given to the deny of rights. So if none allowance is found, -->
 		<!--  the resource cannot be acceded. -->
 		<!-- The path could be a java regular expression (MUST BE indicated by using brackets) -->
-		<branch path="{^/sites/default/allowed/.*$}">
+		<branch path="{^/sites/default/.*$}">
 			
 				<!-- For each group/role/user a java regular expression can be used(MUST BE indicated by using brackets) -->
 				<!-- The type indicate the right of the user. The order doesn't matter.  -->
@@ -41,6 +41,10 @@
 				<!-- If none type is set, or empty type, the allowance for the group is ignored. -->
 				<allowUser name="{.*}" type="crw"/>				
 		</branch>
+		
+		<branch path="NO_FILES">					
+				<allowRole name="Root administrator" type="crw"/>		
+		</branch>		
 		
 		<branch path="/">
 			

@@ -13,11 +13,11 @@
 	<!--la version de la classe d'import d'OpenCms-->
 	<property name="module.info.exportversion" value="7" />
 	<property name="module.module.name" value="com.eurelis.opencms.workflows" />
-	<property name="module.module.nicename" value="Eurelis Workflows" />
-	<property name="module.module.group" value="OpenCms Workflows" />
+	<property name="module.module.version" value="1.0.2" />
+	<property name="module.module.nicename" value="Eurelis Workflows - version ${module.module.version}" />
+	<property name="module.module.group" value="OpenCms Workflows" />		
 	<property name="module.module.moduleclass" value="com.eurelis.opencms.workflows.InitWorkflowAction" />
 	<property name="module.module.moduledescription" value="Eurelis Workflow Module. //// OpenCMS - Eurelis - EUR-FRAMEWORK : Module Common Portlets Copyright (C) Eurelis - http://www.eurelis.com This program is free software: you can redistribute it and/or modify it under the terms version 3 of the GNU Lesser General Public License as published by the Free Software Foundation. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the version 3 of the GNU Lesser General Public License for more details. You should have received a copy of the GNU Lesser General Public License along with this program. If not, see http://www.gnu.org/licenses/gpl-3.0.html." />
-	<property name="module.module.version" value="1.0.1" />
 	<property name="module.module.authorname" value="Eurelis" />
 	<property name="module.module.authoremail" value="contact@eurelis.com" />
 	<property name="module.module.userinstalled" value="" />
@@ -116,6 +116,13 @@
 
 		<copy todir="${folder.dist}">
 			<fileset dir="${folder.vfs}" excludes="**/__properties,**/__properties/**,**/__acl,**/__acl/**,**/*.class" />
+		</copy>
+		
+
+		<mkdir dir="${folder.dist}/system/modules/${module.module.name}/classes" />
+		
+		<copy todir="${folder.dist}/system/modules/${module.module.name}/classes">
+			<fileset dir="${folder.src}" excludes="**/__properties,**/__properties/**,**/__acl,**/__acl/**,**/*.java" />
 		</copy>
 
 		<copy todir="${folder.module.generated.lib}">

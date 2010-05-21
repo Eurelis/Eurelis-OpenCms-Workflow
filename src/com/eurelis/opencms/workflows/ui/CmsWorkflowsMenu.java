@@ -30,7 +30,6 @@ import org.opencms.workplace.administration.CmsAdminMenuItem;
 import org.opencms.workplace.tools.CmsIdentifiableObjectContainer;
 import org.opencms.workplace.tools.CmsToolDialog;
 import org.opencms.workplace.tools.CmsToolManager;
-import org.opencms.workplace.tools.I_CmsIdentifiableObjectContainer;
 
 import com.eurelis.opencms.workflows.ui.toolobject.WorkflowMenuItem;
 import com.eurelis.opencms.workflows.ui.toolobject.WorkflowMenuItemLoader;
@@ -52,7 +51,7 @@ public class CmsWorkflowsMenu extends CmsToolDialog {
 	public static final String DEFAULT_TARGET = "admin_content";
 
 	/** Group container. */
-	private I_CmsIdentifiableObjectContainer m_groupContainer = new CmsIdentifiableObjectContainer(
+	private CmsIdentifiableObjectContainer m_groupContainer = new CmsIdentifiableObjectContainer(
 			true, true);
 
 	/**
