@@ -71,11 +71,11 @@ In *params* tag, you can put as many *param* instance as you want. Each of this 
  
 Here is the display corresponding to previous code:
 
-http://code.google.com/p/eurelis-opencms-workflows/wiki/images/listParamMyFirstWorkflow.png
+http://eurelis-opencms-workflows.googlecode.com/svn/wiki/images/listParamMyFirstWorkflow.png
 
 Here is the one corresponding to the code of the previous section:
 
-http://code.google.com/p/eurelis-opencms-workflows/wiki/images/listParamValidationProcess.png
+http://eurelis-opencms-workflows.googlecode.com/svn/wiki/images/listParamValidationProcess.png
 
 == The users rights section ==
 
