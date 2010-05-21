@@ -14,16 +14,16 @@ According to the value set for property OSWORKFLOWMANAGER_CLASSNAME, you will ha
 
   * *com.eurelis.opencms.workflows.workflows.OSWorkflowManager* : This implementation doesn't take care of access right on workflows.
   * *com.eurelis.opencms.workflows.workflows.OSWorkflowManagerWithRightManagement* : 
-    * If there is no file attached to the WF, the rights apply are those of NO_FILES branch.
+    * If there is no file attached to the WF, the rights applied are those of NO_FILES branch.
     * The creator of a workflow always has read rights on his workflow.
     * The other users follow the rule define statically in the config file.
   * *com.eurelis.opencms.workflows.workflows.OSWorkflowManagerWithRightManagementAndOwnerForbidden* : 
-    * If there is no file attached to the WF, the rights apply are those of NO_FILES branch.
+    * If there is no file attached to the WF, the rights applied are those of NO_FILES branch.
     * The creator of a workflow always has read rights on his workflow.
     * The creator of a workflow never has write rights on his workflow.
     * The other users follow the rule define statically in the config file.
   * *com.eurelis.opencms.workflows.workflows.OSWorkflowManagerWithDynamicRightManagement* :
-    * If there is no file attached to the WF, the rights apply are those of NO_FILES branch.
+    * If there is no file attached to the WF, the rights applied are those of NO_FILES branch.
     * The creator of a workflow always has read rights on his workflow.
     * The creator of a workflow never has write rights on his workflow.
     * The other users follow the rule define statically in the config file.
