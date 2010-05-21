@@ -35,9 +35,16 @@
 		</branch>
 		
 		
-		<branch path="{^/sites/default/.*$}">					
-				<allowUser name="bbbb" type="c"/>
-		</branch>	
+		<branch path="{^/sites/default/.*$}">
+			
+				<!-- For each group/role/user a java regular expression can be used(MUST BE indicated by using brackets) -->
+				<!-- The type indicate the right of the user. The order doesn't matter.  -->
+				<!--  * The "r" indicate that the user/group/role could access the informations of the workflow (but cannot act on it)  -->
+				<!--  * The "w" indicate that the user/group/role could act on the workflow (but cannot access informations) -->
+				<!-- If none type is set, or empty type, the allowance for the group is ignored. -->
+				<allowUser name="{.*}" type="cr"/>	
+				<allowRole name="Root administrator" type="crw"/>			
+		</branch>
 		
 		<!-- This particular branch must be declare to allows read/write/creation when a WF has no attached files -->
 		<branch path="NO_FILES">

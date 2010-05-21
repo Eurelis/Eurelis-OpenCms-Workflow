@@ -34,7 +34,7 @@
       loadingOn();
     }
     function checkSize() {
-      var req = 'admin-fs.jsp?<%=req %>scroll=';
+      var req = 'workflows-fs.jsp?<%=req %>scroll=';
       if (wHeight() <= pHeight() && wWidth() < 213) {
     	parent.location.href = req + 'true';
       } else if (wHeight() > pHeight() && wWidth() > 212) {
