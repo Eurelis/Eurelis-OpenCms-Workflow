@@ -1,6 +1,6 @@
+#summary The installation guide of the module
 #labels -
-#sidebar pragma
-The installation guide of the module
+<h1>The installation guide of the module<h1>
 
 = Introduction =
 
