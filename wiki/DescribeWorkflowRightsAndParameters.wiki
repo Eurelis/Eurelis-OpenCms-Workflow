@@ -1,0 +1,127 @@
+#summary Configure the rights and the list of parameters relating to a workflow
+<h1>How to configure a type of workflow - Create a configuration file<h1>
+
+= Introduction =
+
+Each workflow is associated to a file that describes its relating rights and the list of parameters that will be consumed during the workflow execution
+
+This article will describes this files.
+
+= Details =
+
+== Document structure ==
+
+The workflow description file structure is the following :
+
+{{{
+<workflow name="ValidationWorkflow">
+
+   <params>
+      <param name="SelectFileRecursively" type="boolean" display="Select files recursively" default="true"/>
+      <param name="SelectAssociatedFile" type="boolean" display="Select associated files"/>
+      <param name="CheckOffline" type="boolean" display="Select only offline files"/>
+   </params>
+
+   <rights>
+      <branch path="/">
+         <allowRole name="Root administrator" type="rw"/>
+         <allowGroup name="{^Admin.*}" type="rw"/>	
+      </branch>
+
+      <branch path="{^/sites/default/.*$}">
+         <allowUser name="bbbb" type="r"/>
+         <allowUser name="cccc" type="w"/>
+      </branch>
+ 
+      <branch path="NO_FILES">
+         <allowRole name="Root administrator" type="rw"/>
+         <allowGroup name="{^Admin.*}" type="rw"/>	
+      </branch>
+   </rights>
+
+</workflow>
+}}}
+
+It is divided in two parts :
+  * The *params* part is the one where are define the initial parameters of the workflow
+  * The *rights* part allow to define the rights associated to each user. This rights are configured by branch, i.e per section of the virtual file system.
+ 
+<u>Note:</u>  the name associated to the "workflow" tag is ignored by the system.
+
+== The parameters section ==
+
+Here is a more exaustif example of what you can do with initial parameters:
+{{{
+<params>
+   <param name="AStringWithDefault" type="String" display="String" default="true"/>
+   <param name="AListStringWithDefault" type="String" display="List of String" default="a;b;c;d"/>
+   <param name="AListOfShort" type="short" display="a list of short" default="1;2;3;4"/>
+   <param name="AChar" type="char" display="A character" default="c"/>
+   <param name="AInt" type="int" display="A integer" default="1"/>
+   <param name="AInt2" type="int" display="A integer without default"/>
+   <param name="AListInt" type="int" display="A list of integer" default="1;2;3;4"/>
+<params/>
+}}}
+ 
+In *params* tag, you can put as many *param* instance as you want. Each of this tag represent an initial parameter that the user must complete when he instanciates a workflow
+  * *name* is the system name of the parameter. This is the value used by the system to get what enter the user. This name is  not shown to the user and it is recommand to avoid special character or space. This attribut is _*mandatory*_.
+  * *type* is the type of parameter. It is use by the system to valid the entry of the user. The allowed value are Jave native type. This attribut is _*mandatory*_.
+  * *display* is the string displayed to the user. This attribut is _*mandatory*_.
+  * *default* is a list of default value seprated with semi-colon. This field is _*optionnal*_.
+ 
+Here is the display corresponding to previous code:
+
+http://code.google.com/p/eurelis-opencms-workflows/wiki/images/listParamMyFirstWorkflow.png
+
+Here is the one corresponding to the code of the previous section:
+
+http://code.google.com/p/eurelis-opencms-workflows/wiki/images/listParamValidationProcess.png
+
+== The users rights section ==
+
+Here is an example:
+
+{{{
+<rights>
+   <branch path="/">
+      <allowRole name="Root administrator" type="rw"/>
+      <allowUser name="{^bi.*$}" type="rw"/>
+   </branch>
+   <branch path="{^/sites/default/allowed/all/.*$}">
+      <allowUser name="bbbb" type="r"/>
+      <allowUser name="cccc" type="w"/>
+      <allowGroup name="MyGroup" type="rw"/>
+      <allowRole name="Users" type="r"/>
+   </branch>
+   <branch path="NO_FILES">
+      <allowUser name="bbbb" type="r"/>
+      <allowUser name="cccc" type="w"/>
+      <allowGroup name="MyGroup" type="rw"/>
+      <allowRole name="Users" type="r"/>
+   </branch>
+</rights>
+ }}}
+ 
+In *rights* tag (only one for the all document), each *branch* tag contains the description of rights for users (*allowUser*), roles (*allowRole*) or groups (*allowGroup*). You can put as much tag allowUser/allowRole and allowGroup as required. Theses can be shuffled.
+
+=== Rights definition ===
+
+Each user define by attribut _name_ are associated with right defined in attribut _type_.
+
+If type content :
+  * *"r"* then the user can access the informations about instances of workflow.
+  * *"w"* then the user can make the instance of workflow progress.
+  * *"c"* then the user can create instance of workflow.
+  
+=== Use pattern instead... ===
+
+The _path_ of branch tag and the _name_ attribut of tags allowUser, allowGroup and allowRole allow to use regular expression instead of basic one. Theses regular expressions must put inside brackets ("*{*" and "*}*") to be recognize and analysed by the system.
+
+=== If there is no associated files... ===
+
+Rights are defined per branch. So the allowance are relative to the list of files associated to the instance of workflow. In some case, you can have no associated files. To define the rights of theses particular instances of workflow, use the keyword "*NO_FILES*" as value of attribut path for branch tag.
+
+=== Remarks ===
+
+  * A user always has read rights on instance of workflow he created, but never had write rights (except by dynamic rights)
+  * If no rights are define for a user, *the default value is forbidden*. Nevertheless, *priority is given to allowance*. So if a master branch define an allowance for a user, these one cannot be restreint by rights define on a subsection of the VFS.

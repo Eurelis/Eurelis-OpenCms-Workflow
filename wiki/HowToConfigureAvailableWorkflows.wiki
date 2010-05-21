@@ -1,0 +1,25 @@
+#summary Configure the list of available workflows
+<h1>Configure the list of available workflows<h1>
+
+= Introduction =
+
+The list of available workflows can be configure easily :
+  # Write an workflow, using OSWorkflow syntax [http://www.opensymphony.com/osworkflow/documentation.action OS Workflow Documentation]
+  # Write the file to describes parameters and users rights (cf [DescribeWorkflowRightsAndParameters])
+  # Configure the available workflows thanks to a file that links the two files
+
+= Details =
+
+So as to configure the list of workflows that will be available in the all application, you should create *one or more* file of type "workflowlist" in the folder specified in _WORKFLOWLIST_CONFIGFILE_FOLDER_ of module config file (cf [BasicConfigurationOfTheModule]).
+(New > Structured content > List of Workflows)
+ 
+When you edit a file of this type, you get the following window:
+ 
+http://code.google.com/p/eurelis-opencms-workflows/wiki/images/fenetre_configuration_workflows_accessibles.png
+ 
+You have to create as instance as workflows you want to allow access (for this, use the green plus available when clicking on the target).
+For each instance you need to define :
+  * *Title* : the name of the workflow
+  * *Description* : the description that will be displayed in front of the name when create an instance of workflow
+  * *WF File* : the path of the XML workflow description file (OSWorkflow language).
+  * *WF Rights* : the path of the XML workflow configuration file. This file contains the description of the user rights and of the initial parameter of the workflow. (cf next section)
