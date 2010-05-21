@@ -1,0 +1,272 @@
+#labels -
+#sidebar pragma
+The installation guide of the module
+
+= Introduction =
+
+The installation required many steps:
+  # The module installaton himself
+  # The JNDI config required by the implementation of OSWorkflow
+  # The DB Configuration (required table configurations)
+  # The OpenCms Configuration (SMTP/Menus)
+
+Here come the details about each steps. 
+Please do not reload your application context until the end of the installation.
+
+= Details =
+
+NB: In following document
+  * CATALINA_HOME is tomcat installation folder
+  * OPENCMS_HOME is the folder of your OpenCms web-app
+
+== The module installation ==
+
+It's the easier part of the process:
+  # Download the built module from the repository or compile it from sources (an Ant build file is provided, the generated module is in _module_ folder
+  # Use the OpenCms module installer 
+
+== The JNDI config ==
+
+Here is, from my point of view the most difficult part of the installation, because you need  to know how to configure your application server. The following steps are describe for Apache Tomcat.
+  # Put _mysql-connector-java-5.0.7-bin.jar_ in the folder *CATALINA_HOME/common/lib* (tomcat 5.x) or *CATALINA_HOME/lib* (tomcat 6)
+  # Configure the context of the application so as to define the JNDI name of the DB
+(Please update YourWebAppsPath, YourUserName, YourPassword, YourDBServer and YourDatabaseURL with your config parameters ;))
+
+
+=== Tomcat 5.0 ===
+
+Update *CATALINA_HOME/conf/server.xml*
+{{{
+<Context path="/YourWebAppsPath" docBase="/YourWebAppsPath">
+   <Resource name="jdbc/opencms" scope="Shareable" type="javax.sql.DataSource" />
+      <ResourceParams name="jdbc/opencms">
+      <parameter>
+         <name>username</name>
+         <value>YourUserName</value>
+      </parameter>
+      <parameter>
+         <name>password</name>
+         <value>YourPassword</value>
+      </parameter>
+      <parameter>
+         <name>driverClassName</name>
+         <value>org.gjt.mm.mysql.Driver</value>
+      </parameter>
+      <parameter>
+         <name>url</name>
+         <value>
+            jdbc:mysql://YourDBServer:3306/YourDatabaseURL?zeroDateTimeBehavior=convertToNull
+         </value>
+      </parameter>
+   </ResourceParams>
+</Context>
+}}}
+
+
+=== Tomcat 5.5 ===
+
+Create a new file *CATALINA_HOME/conf/Catalina/localhost/YourWebAppName.xml* and put the following content in:
+{{{
+<Context path="/YourWebAppsPath" docBase="YourWebAppsPath" debug="5" reloadable="false" crossContext="true">
+   <Resource name="jdbc/opencms" 
+      auth="Container" 
+      type="javax.sql.DataSource" 
+      maxActive="100" 
+      maxIdle="30" 
+      maxWait="10000" 
+      username="YourUserName" 
+      password="YourPassword" 
+      driverClassName="com.mysql.jdbc.Driver" 
+      url="jdbc:mysql://YourDBServer:3306/YourDatabaseURL?zeroDateTimeBehavior=convertToNull"/>
+</Context>
+}}}
+
+=== Tomcat 6.0 ===
+
+Update *CATALINA_HOME/conf/server.xml*
+{{{
+<Context path="/YourWebAppsPath" docBase="YourWebAppsPath" debug="0" crossContext="true">
+   <Resource name="jdbc/opencms" 
+      auth="Container" 
+      type="javax.sql.DataSource" 
+      maxActive="100" 
+      maxIdle="30" 
+      maxWait="10000" 
+      username="YourUserName" 
+      password="YourPassword" 
+      driverClassName="com.mysql.jdbc.Driver" 
+      url="jdbc:mysql://YourDBServer:3306/YourDatabaseURL?zeroDateTimeBehavior=convertToNull"/>
+</Context>
+}}}
+
+Here is my configuration under this server :
+{{{
+<Host name="localhost"  appBase="webapps"
+            unpackWARs="true" autoDeploy="true"
+            xmlValidation="false" xmlNamespaceAware="false">
+				
+   <Context path="/instance1" docBase="instance1" debug="0" crossContext="true">
+     <Resource name="jdbc/opencms" 
+      auth="Container" 
+      type="javax.sql.DataSource" 
+      maxActive="100" 
+      maxIdle="30" 
+      maxWait="10000" 
+      username="root" 
+      password="" 
+      driverClassName="com.mysql.jdbc.Driver" 
+      url="jdbc:mysql://localhost:3306/instance1?zeroDateTimeBehavior=convertToNull"/>
+    </Context>
+</Host>
+}}}
+
+== The DB Configurations ==
+
+Create the required table with the following script (for MySQL)
+
+{{{
+DROP TABLE IF EXISTS OS_PROPERTYENTRY;
+DROP TABLE IF EXISTS OS_CURRENTSTEP_PREV;
+DROP TABLE IF EXISTS OS_HISTORYSTEP_PREV;
+DROP TABLE IF EXISTS OS_CURRENTSTEP;
+DROP TABLE IF EXISTS OS_HISTORYSTEP;
+DROP TABLE IF EXISTS OS_WFENTRY;
+
+DROP TABLE IF EXISTS OS_MEMBERSHIP;
+DROP TABLE IF EXISTS OS_USER;
+DROP TABLE IF EXISTS OS_GROUP;
+DROP TABLE IF EXISTS OS_PROPERTYENTRY;
+
+CREATE TABLE OS_WFENTRY
+(
+   ID int,
+   NAME varchar(128),
+   STATE smallint,
+   primary key (ID)
+);
+
+CREATE TABLE OS_CURRENTSTEP
+(
+   ID int,
+   ENTRY_ID int,
+   STEP_ID smallint,
+   ACTION_ID smallint,
+   OWNER varchar(20),
+   START_DATE TIMESTAMP ,
+   FINISH_DATE TIMESTAMP ,
+   DUE_DATE TIMESTAMP ,
+   STATUS varchar(20),
+   CALLER varchar(20),
+   primary key (ID),
+   foreign key (ENTRY_ID) references OS_WFENTRY(ID)
+);
+
+CREATE TABLE OS_HISTORYSTEP
+(
+   ID int,
+   ENTRY_ID int,
+   STEP_ID smallint,
+   ACTION_ID smallint,
+   OWNER varchar(20),
+   START_DATE TIMESTAMP ,
+   FINISH_DATE TIMESTAMP ,
+   DUE_DATE TIMESTAMP ,
+   STATUS varchar(20),
+   CALLER varchar(20),
+   primary key (ID),
+   foreign key (ENTRY_ID) references OS_WFENTRY(ID)
+);
+
+CREATE TABLE OS_CURRENTSTEP_PREV
+(
+   ID int,
+   PREVIOUS_ID int,
+   primary key (ID, PREVIOUS_ID),
+   foreign key (ID) references OS_CURRENTSTEP(ID),
+   foreign key (PREVIOUS_ID) references OS_HISTORYSTEP(ID)
+);
+
+CREATE TABLE OS_HISTORYSTEP_PREV
+(
+   ID int,
+   PREVIOUS_ID int,
+   primary key (ID, PREVIOUS_ID),
+   foreign key (ID) references OS_HISTORYSTEP(ID),
+   foreign key (PREVIOUS_ID) references OS_HISTORYSTEP(ID)
+);
+
+CREATE TABLE OS_PROPERTYENTRY
+(
+   GLOBAL_KEY varchar(255),
+   ITEM_KEY varchar(255),
+   ITEM_TYPE smallint,
+   STRING_VALUE text,
+   DATE_VALUE TIMESTAMP ,
+   DATA_VALUE blob,
+   FLOAT_VALUE float,
+   NUMBER_VALUE numeric,
+   primary key (GLOBAL_KEY, ITEM_KEY)
+);
+
+CREATE TABLE OS_USER
+(
+   USERNAME varchar(128) NOT NULL,
+   PASSWORDHASH varchar(128),
+   PRIMARY KEY (USERNAME)
+);
+
+CREATE TABLE OS_GROUP
+(
+   GROUPNAME varchar(128) NOT NULL,
+   PRIMARY KEY (GROUPNAME)
+);
+
+CREATE TABLE OS_MEMBERSHIP
+(
+   USERNAME varchar(128),
+   GROUPNAME varchar(128),
+   primary key (USERNAME, GROUPNAME),
+   foreign key (USERNAME) references OS_USER(USERNAME),
+   foreign key (GROUPNAME) references OS_GROUP(GROUPNAME)
+);
+}}}
+
+
+== OpenCms Configuration ==
+
+=== Mailhost management ===
+
+Here is the configuration of the SMTP use to send notifications during workflows executions. It's the basic OpenCms configuration, if you run the module on an in-use OpenCms, you probably can forget this part. 
+
+In file _OPENCMS_HOME/WEB-INF/config/opencms-system.xml_ configure your SMTP server with following lines:
+{{{
+<mail>
+   <mailfrom>YourMail</mailfrom>
+   <mailhost name="YOUR.SMTP.SERVER" protocol="smtp" />
+</mail>
+}}}
+
+=== Menu configuration ===
+
+Here is the way to follow to add the workflow menu item on Workplace OpenCms pop-up menus.
+It can be boring to do, because you need to to the first following steps for each type of content that OpenCms allows.
+
+Update the _OPENCMS_HOME/WEB-INF/config/opencms-workspace.xml_
+  # For each type of content that must have the workflow menu add the following lines_(XPath = opencms/workplace/explorertypes/explorertype(@name="`*`")/editoptions/contextmenu)_. This add a menu entry to access the workflow, when only one file is selected.
+{{{
+<entry key="GUI_EXPLORER_CONTEXT_WORKFLOWS_0"
+   uri="/system/workplace/workflows/listAvailableWorkflows.jsp"
+   rule="eurelisDisplayRule" />
+}}}
+  # Add the following lines in multicontextmenu section _(XPath = /opencms/workplace/explorertypes/multicontextmenu)_. This add new entry for a muliple files selection. 
+{{{
+<entry key="GUI_EXPLORER_CONTEXT_WORKFLOWS_0"
+   uri="/system/workplace/workflows/listAvailableWorkflows.jsp"
+   rule="eurelisDisplayRule" />
+}}}
+  # Add the following lines in the rules section _(XPath = /opencms/workplace/explorertypes/menurules)_. This add the custom display rule.
+{{{
+<menurule name="eurelisDisplayRule">
+   <menuitemrule class="com.eurelis.opencms.workflows.rules.EurelisWorkflowsDisplayRule"/>
+</menurule>
+}}}
