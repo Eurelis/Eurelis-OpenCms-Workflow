@@ -34,10 +34,10 @@ The default value of the property is _com.eurelis.opencms.workflows.workflows.OS
 == Add more policy ==
 
 All the policy extends the abstract class *com.eurelis.opencms.workflows.workflows.A_OSWorkflowManager*. You can add your own policy by creating your own implementation of the class.
-Only five method must be defined :
+Only four methods must be defined :
 
 {{{
-    /**
+        /**
 	 * Check if the current user has right to see this workflow
 	 * 
 	 * @param key
