@@ -19,7 +19,6 @@ import java.util.TreeMap;
 
 import org.apache.commons.logging.Log;
 import org.opencms.file.CmsObject;
-import org.opencms.file.CmsProject;
 import org.opencms.file.CmsProperty;
 import org.opencms.file.CmsResource;
 import org.opencms.i18n.CmsEncoder;
@@ -27,7 +26,6 @@ import org.opencms.main.CmsLog;
 import org.opencms.main.OpenCms;
 import org.opencms.security.CmsRole;
 
-import com.eurelis.opencms.workflows.util.CmsUtil;
 import com.eurelis.opencms.workflows.util.ErrorFormatter;
 import com.eurelis.opencms.workflows.util.OpenCmsEasyAccess;
 import com.eurelis.opencms.workflows.util.StringChecker;
