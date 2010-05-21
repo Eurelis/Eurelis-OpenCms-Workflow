@@ -14,8 +14,10 @@ So as to configure the list of workflows that will be available in the all appli
 (New > Structured content > List of Workflows)
  
 When you edit a file of this type, you get the following window:
+
  
 http://code.google.com/p/eurelis-opencms-workflows/wiki/images/fenetre_configuration_workflows_accessibles.png
+
  
 You have to create as instance as workflows you want to allow access (for this, use the green plus available when clicking on the target).
 For each instance you need to define :
