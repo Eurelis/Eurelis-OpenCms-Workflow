@@ -18,12 +18,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
-import org.opencms.flex.CmsFlexController;
 import org.opencms.flex.CmsFlexRequest;
 import org.opencms.i18n.CmsEncoder;
 import org.opencms.jsp.CmsJspActionElement;
 import org.opencms.main.OpenCms;
-import org.opencms.staticexport.CmsLinkManager;
 import org.opencms.util.CmsRequestUtil;
 import org.opencms.workplace.CmsDialog;
 import org.opencms.workplace.CmsWorkplace;

@@ -10,7 +10,6 @@
 package com.eurelis.opencms.workflows.workflows;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -37,7 +36,6 @@ import com.eurelis.opencms.workflows.workflows.availableworkflows.AvailableWorkf
 import com.eurelis.opencms.workflows.workflows.availableworkflows.I_AvailableWorkflowCollector;
 import com.eurelis.opencms.workflows.workflows.toolobjects.DescriptionContainer;
 import com.eurelis.opencms.workflows.workflows.toolobjects.WorkflowKey;
-import com.sun.java_cup.internal.internal_error;
 
 /**
  * This object take care of the configuration of workflows (the initial
