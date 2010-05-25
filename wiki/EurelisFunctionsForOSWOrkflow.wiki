@@ -214,7 +214,7 @@ This function allow to modify dynamically the rights associated to the current i
 
 This function required the list of change for rights as parameters. This paremeters is name "*ChangeToApply*".
 
-The value of changeToApply must be a list of element separated with a ";". Each element must follows this format : *propertyType:userGroupRole:NameOrProperty:newRight*
+The value of changeToApply must be a list of element separated with a ";". Each element must follows this format : *propertyType:userGroupRole:nameOrProperty:newRight*
 
 *NB*: This function works only if the policy that use dynamic rights is use (cf [ConfigureRightPolicy#The_developed_policy The developed policy] -> OSWorkflowManagerWithDynamicRightManagement )
 
