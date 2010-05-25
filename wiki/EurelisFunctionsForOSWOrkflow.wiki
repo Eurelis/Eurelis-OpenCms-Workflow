@@ -1,0 +1,209 @@
+#summary Details about the functions developed by Eurelis for OSWorkflow
+<h1>Details about the functions developed by Eurelis for OSWorkflow<h1>
+
+= Introduction =
+
+The following functions have been developed for the two provided workflows:
+  * The task attribution workflow
+  * The approbation workflow
+  
+  
+Each of them correspond to a java class stored in the package_com.eurelis.opencms.workflows.functions_
+
+Here is the class diagram about theses functions
+
+http://eurelis-opencms-workflows.googlecode.com/svn/wiki/images/DiagrammeDeClasseWorkflowEurelisFunctions.png
+
+
+= Details =
+
+==Add new functions==
+
+It's quite easy to add new function that could be use by OSWorkflow. You just have to create a new class that implements the interface *com.opensymphony.workflow.FunctionProvider*. This interface required the implementation of the method _execute()_
+
+This execute() method has three paramateres:
+  * A Map<String,Object> _transcientVar_ that store the all variables that are passed as parameters when calling method _initialize()_ or _doAction()_ on a workflow object (cf [http://www.opensymphony.com/osworkflow/api/ OSWorkflow API]). This two method respectively create an instance of workflow and cross a transition.
+  * A Map<String,String> _args_ where are stored the arguments (and there values) describe in the OSWorkflow workflow description file (cf _arg_ tag associated to each function [http://wiki.opensymphony.com/display/WF/1.+Your+first+workflow OSWorflow documentation]) 
+  * A PropertySet object. This object is associated to each instance of OSWorkflow and stored in DB. This object is used (in our implementation) to store an XML content corresponding to serialized version of a WorkflowPropertyContainer instance. This WorkflowPropertyContainer object stored all information relative to the ongoing workflow (history, author, associated files)
+  
+==Our developed functions==
+
+===EurelisWorkflowFunction===
+
+This is the mother class of all the following functions. It implements the interface *FunctionProvider*. This class collect the informations required by subclasses.
+
+The _execute()_ function does a few thinks :
+  # Initialized the class variables (most are extracted from the PropertySet instance, the other come from parameters values)
+  # call *executeFuncton()*, an abstract method that must be implemented and that is in charge to really execute the required function
+  # Update the WorkflowPropertyContainer object associated to the instance of workflow
+  
+Here are the elements collected during initialization :
+  * The list of associated files
+  * The instance of CmsObject 
+  * The current user name
+  * The user comment 
+  * The list of parameters values enter by the user when it created the instance
+  * A static comment(used if the action is done automatically) . This element is set in the workflow description file with "comment" argument name (not mandatory).
+  * A static user name (used if the action is done automatically) . This element is set in the workflow description file with "actor" argument name (not mandatory).
+ 
+===JustFillPropertyFunction===
+
+This function do nothing special except add a new entry in the history. You should do it to store user action in the history.
+
+{{{
+<function type="class">
+   <arg name="class.name">
+      com.eurelis.opencms.eurelisworkflows.functions.JustFillPropertyFunction
+   </arg>
+   <arg name="comment">YourComment</arg>
+   <arg name="actor">YourActorName</arg>
+</function>
+}}}
+
+===SelectFileRecursivelyFunction===
+
+This function allows to modulate the list of selected files according to user parameters. It take the list of selected used files and apply the user wish to get the final list of selected files.
+
+This method has three parameters (optional, default value is false) :
+  * *SelectFileRecursively* indicate if a recursive algorithm must be used
+  * *SelectAssociatedFile* indicate if the associated files must be add to the list
+  * *CheckOffline* indicate if only Offline files must be add to the list
+  
+So as to used this function, the parameters must be describes in the workflow rights configuration file (cf [DescribeWorkflowRightsAndParameters How to describes parameters]) with the following code:
+{{{
+<params>
+   <param name="SelectFileRecursively" type="boolean" display="Select files recursively" default="true"/>
+   <param name="SelectAssociatedFile" type="boolean" display="Select associated files"/>
+   <param name="CheckOffline" type="boolean" display="Select only offline files"/>	
+</params>
+}}}
+
+Then you can use the function with the following code :
+{{{
+<function type="class">
+   <arg name="class.name">
+      com.eurelis.opencms.eurelisworkflows.functions.SelectFileRecursivelyFunction
+   </arg>
+   <arg name="comment">YourComment</arg>
+   <arg name="actor">YourActorName</arg>
+</function>
+}}}
+
+===MoveToProjectFunction===
+
+This function move the list of associated files to another project. The required parameters is the name of the target project.
+
+This is done with the parameter "*destination*".
+
+*BE CAREFULL* : this function must not be use to move the files to the project _Online_. Use [EurelisFunctionsForOSWOrkflow#PublishResourcesFunction PublishResourcesFunction] instead.
+
+Here is the way to use this function:
+{{{
+<function type="class">
+   <arg name="class.name">	
+      com.eurelis.opencms.eurelisworkflows.functions.MoveToProjectFunction
+   </arg>
+   <arg name="destination">Staging</arg>
+   <arg name="comment">YourComment</arg>
+   <arg name="actor">YourActorName</arg>
+</function>
+}}}
+ 
+===PublishResourcesFunction===
+
+This function publish the list of files associated to the workflow.
+
+Use it with :
+{{{
+<function type="class">
+   <arg name="class.name">
+      com.eurelis.opencms.eurelisworkflows.functions.PublishResourcesFunction
+   </arg>
+   <arg name="comment">YourComment</arg>
+   <arg name="actor">YourActorName</arg>
+</function>
+}}}
+
+===ChangeLockOnResourcesFunction===
+
+This function allows to change the lock value on the all files associated to the workflow.
+
+The required parameters is the target value of the lock. This value is set statically in workflow description file with an argument called "*lockValue*"
+
+{{{
+<function type="class">
+   <arg name="class.name">
+      com.eurelis.opencms.eurelisworkflows.functions.ChangeLockOnResourcesFunction
+   </arg>
+   <arg name="lockValue">false</arg>
+   <arg name="comment">YourComment</arg>
+   <arg name="actor">YourActorName</arg>
+</function>
+}}}
+
+===MoveToProjectAndSetLockFunction===
+
+This function gather the functionality of [EurelisFunctionsForOSWOrkflow#MoveToProjectFunction MoveToProjectFunction] and [EurelisFunctionsForOSWOrkflow#ChangeLockOnResourcesFunction ChangeLockOnResourcesFunction].
+So it required both "*lockValue*" and "*destination*" parameters as describes before.
+
+{{{
+<function type="class">
+   <arg name="class.name">
+      com.eurelis.opencms.eurelisworkflows.functions.ChangeLockOnResourcesFunction
+   </arg>
+   <arg name="lockValue">false</arg>
+   <arg name="destination">Staging</arg>
+   <arg name="comment">YourComment</arg>
+   <arg name="actor">YourActorName</arg>
+</function>
+}}}
+
+===EmailNotificationFunction===
+
+This function allow to send a notification to the users. So has to works well, the SMTP must be configured (cf [HowToInstallTheModule#Mailhost_management]).
+
+The list of parameters is the following :
+  * The list of receivers, set in the workflow description file with parameter "*receivers*"
+  * The body of the email (optional), set in the workflow description file with parameter "*email_body*"
+  * The subject of the email (optional), set in the workflow description file with parameter "*email_subject*"
+ 
+====Receivers configuration==== 
+  
+The "receivers" value is a list of people, separated with ';'. Each of theses receivers can be:
+  * _An email address_
+  * _A value of the current workflow property_ (only "author" is available for now) : use the prefix *instance:* before the property name. (ex: instance:author -> Send the notification to the creator of the workflow )
+  * _An OpenCms property associated to the files_ : use the prefix *opencms:* before the Opencms Property value to use. (ex: opencms:reviewer ->Send a notification to the reviewer of the files)
+  * _The value of the creation parameters of the workflow instance_ : use the prefix *parameters:* before the parameter name (ex: parameter:receivers -> The value of the parameter _receivers_ entered when creating the instance of workflow)
+  
+*NB*: The OpenCms property or the parameter must be filled with a list of OpenCms login. Each login must be associated to a valid email address.
+
+Example: toto@eurelis.com;titi@myCompagny.com;opencms:reviewer;parameter:receivers;instance:author
+
+====Email body configuration====
+
+The email body must contains key values that will be updated when sending the message :
+  * *[[initialcomment]]* : The creation comment
+  * *[[lastcomment]]* : The last entered comment
+  * *[[lastlastcomment]]* : The last last entered comment
+  * *[[creator]]* : The login of the person that has create the workflow
+  * *[[lastactor]]* : The login of the person that has perform the last action
+  * *[[lastlastactor]]* : The login of the person that has perform the last last action
+  
+
+Here is the way of using this function:
+{{{
+<function type="class">
+   <arg name="class.name">
+      com.eurelis.opencms.eurelisworkflows.functions.EmailNotificationFunction
+   </arg>
+   <arg name="receivers">
+      s.bianco@eurelis.com;sebastien.bianco@gmail.com;opencms:reviewer
+   </arg>
+   <arg name="email_body">
+      Le(s) fichier(s) suivant vous ont été proposé à validation par [[creator]] : [[initialcomment]]
+   </arg>
+   <arg name="email_subject">
+      [Validation] Des fichiers sont en demande de validation.
+   </arg>
+</function>
+}}}
