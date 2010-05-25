@@ -17,7 +17,7 @@ http://eurelis-opencms-workflows.googlecode.com/svn/wiki/images/DiagrammeDeClass
 
 = Details =
 
-==Add new functions==
+== Add new functions ==
 
 It's quite easy to add new function that could be use by OSWorkflow. You just have to create a new class that implements the interface *com.opensymphony.workflow.FunctionProvider*. This interface required the implementation of the method _execute()_
 
@@ -26,9 +26,9 @@ This execute() method has three paramateres:
   * A Map<String,String> _args_ where are stored the arguments (and there values) describe in the OSWorkflow workflow description file (cf _arg_ tag associated to each function [http://wiki.opensymphony.com/display/WF/1.+Your+first+workflow OSWorflow documentation]) 
   * A PropertySet object. This object is associated to each instance of OSWorkflow and stored in DB. This object is used (in our implementation) to store an XML content corresponding to serialized version of a WorkflowPropertyContainer instance. This WorkflowPropertyContainer object stored all information relative to the ongoing workflow (history, author, associated files)
   
-==Our developed functions==
+== Our developed functions ==
 
-===EurelisWorkflowFunction===
+=== EurelisWorkflowFunction ===
 
 This is the mother class of all the following functions. It implements the interface *FunctionProvider*. This class collect the informations required by subclasses.
 
@@ -46,7 +46,7 @@ Here are the elements collected during initialization :
   * A static comment(used if the action is done automatically) . This element is set in the workflow description file with "comment" argument name (not mandatory).
   * A static user name (used if the action is done automatically) . This element is set in the workflow description file with "actor" argument name (not mandatory).
  
-===JustFillPropertyFunction===
+=== JustFillPropertyFunction ===
 
 This function do nothing special except add a new entry in the history. You should do it to store user action in the history.
 
@@ -60,7 +60,7 @@ This function do nothing special except add a new entry in the history. You shou
 </function>
 }}}
 
-===SelectFileRecursivelyFunction===
+=== SelectFileRecursivelyFunction ===
 
 This function allows to modulate the list of selected files according to user parameters. It take the list of selected used files and apply the user wish to get the final list of selected files.
 
@@ -89,7 +89,7 @@ Then you can use the function with the following code :
 </function>
 }}}
 
-===MoveToProjectFunction===
+=== MoveToProjectFunction ===
 
 This function move the list of associated files to another project. The required parameters is the name of the target project.
 
@@ -109,7 +109,7 @@ Here is the way to use this function:
 </function>
 }}}
  
-===PublishResourcesFunction===
+=== PublishResourcesFunction ===
 
 This function publish the list of files associated to the workflow.
 
@@ -124,7 +124,7 @@ Use it with :
 </function>
 }}}
 
-===ChangeLockOnResourcesFunction===
+=== ChangeLockOnResourcesFunction ===
 
 This function allows to change the lock value on the all files associated to the workflow.
 
@@ -141,7 +141,7 @@ The required parameters is the target value of the lock. This value is set stati
 </function>
 }}}
 
-===MoveToProjectAndSetLockFunction===
+=== MoveToProjectAndSetLockFunction ===
 
 This function gather the functionality of [EurelisFunctionsForOSWOrkflow#MoveToProjectFunction MoveToProjectFunction] and [EurelisFunctionsForOSWOrkflow#ChangeLockOnResourcesFunction ChangeLockOnResourcesFunction].
 So it required both "*lockValue*" and "*destination*" parameters as describes before.
@@ -158,7 +158,7 @@ So it required both "*lockValue*" and "*destination*" parameters as describes be
 </function>
 }}}
 
-===EmailNotificationFunction===
+=== EmailNotificationFunction ===
 
 This function allow to send a notification to the users. So has to works well, the SMTP must be configured (cf [HowToInstallTheModule#Mailhost_management Mailhost management]).
 
@@ -167,7 +167,7 @@ The list of parameters is the following :
   * The body of the email (optional), set in the workflow description file with parameter "*email_body*"
   * The subject of the email (optional), set in the workflow description file with parameter "*email_subject*"
  
-====Receivers configuration==== 
+==== Receivers configuration ==== 
   
 The "receivers" value is a list of people, separated with ';'. Each of theses receivers can be:
   * _An email address_
@@ -179,15 +179,15 @@ The "receivers" value is a list of people, separated with ';'. Each of theses re
 
 Example: toto@eurelis.com;titi@myCompagny.com;opencms:reviewer;parameter:receivers;instance:author
 
-====Email body configuration====
+==== Email body configuration ====
 
 The email body must contains key values that will be updated when sending the message :
   * *`[[`initialcomment`]]`* : The creation comment
-  * *`[[`lastcomment]]* : The last entered comment
-  * *[[lastlastcomment]]* : The last last entered comment
-  * *[[creator]]* : The login of the person that has create the workflow
-  * *[[lastactor]]* : The login of the person that has perform the last action
-  * *[[lastlastactor]]* : The login of the person that has perform the last last action
+  * *`[[`lastcomment`]]`* : The last entered comment
+  * *`[[`lastlastcomment`]]`* : The last last entered comment
+  * *`[[`creator`]]`* : The login of the person that has create the workflow
+  * *`[[`lastactor`]]`* : The login of the person that has perform the last action
+  * *`[[`lastlastactor`]]`* : The login of the person that has perform the last last action
   
 
 Here is the way of using this function:
@@ -200,10 +200,69 @@ Here is the way of using this function:
       s.bianco@eurelis.com;sebastien.bianco@gmail.com;opencms:reviewer
    </arg>
    <arg name="email_body">
-      Le(s) fichier(s) suivant vous ont &eacute;t&eacute; propos&eacute; &agrave; validation par [[creator]] : [[initialcomment]]
+      Le(s) fichier(s) suivant vous ont ete propose a validation par [[creator]] : [[initialcomment]]
    </arg>
    <arg name="email_subject">
       [Validation] Des fichiers sont en demande de validation.
    </arg>
 </function>
 }}}
+
+=== ChangeAllowedPeopleFunction ===
+
+This function allow to modify dynamically the rights associated to the current instance of the workflows. It overrides all previous defined rights. *Priority is given to allowance*.
+
+This function required the list of change for rights as parameters. This paremeters is name "*ChangeToApply*".
+
+The value of changeToApply must be a list of element separated with a ";". Each element must follows this format : *propertyType:userGroupRole:NameOrProperty:newRight*
+
+*NB*: This function works only if the policy that use dynamic rights is use (cf [ConfigureRightPolicy#The_developed_policy The developed policy] -> OSWorkflowManagerWithDynamicRightManagement )
+
+==== propertyType ====
+
+The type of property that will contains the list of User/Role/Group on which changes must be done. Here are the allowed value :
+  * *opencmcs* the property is an OpenCms object
+  * *instance* the property is relative to an instance of the workflow (only _author_ - the instance creator  - and _lastactor_ - the person that made the last action - are available now)
+  * *parameter* the property is a value passed as parameter when creating the instance of workflow 
+  * *property* the property is the value of an OpenCms property relative to associated files
+  
+  
+==== userGroupRole ====
+
+Indicate to which kind of object the changes will be appied :
+  * *u* the changes are applied on user
+  * *g* the changes are applied on group
+  * *r* the changes are applies on roles
+  
+==== nameOrProperty ====
+
+The name of the user/group/role on which changes will be applied. It's so possible to use regular expression between "{" and "}" (cf [DescribeWorkflowRightsAndParameters#The_users_rights_section How to configure users rights]).
+
+==== newRight ====
+
+This string contains the description of the rights to add (nothing). This new rights override totally previously defined rights (statically or dynamically). "r" give the read rights, "w" give the write rights, "rw" both, "_" remove all rights.
+
+==== A few examples ====
+
+  * _opencms:u:Toto:rw_ : the user with login "Toto" receive read/write rights
+  * _opencms:r:Root Administrator:w_ : All person with role "Root Administrator" receive write rights.
+  * _opencms:u:{^a*$}:r_ : All user with login starting with "a" receive the read rights
+  * _opencms:g:{^a*$}:`_`_ : All user that are members of a group which name starts with "a" are denied of rights
+  * _instance:u:author:r_ : The creator of the workflow instance receive read rights
+  * _parameter:u:receivers:rw_ :  All user which login have been listed in the parameter "receivers" when starting the instance of the workflow receive read/write rights
+  * _property:u:reviewer:rw_ : All user which login have been listed in the property "reviewer" relative to a file attached to a workflow receive the read/write rights
+  
+Here is the way to use this function :
+
+{{{
+<function type="class">
+   <arg name="class.name">
+      com.eurelis.opencms.eurelisworkflows.functions.ChangeAllowedPeopleFunction
+   </arg>
+   <arg name="changeToApply">
+      instance:u:author:r;property:u:reviewer:rw
+   </arg>
+</function>
+}}}
+
+
