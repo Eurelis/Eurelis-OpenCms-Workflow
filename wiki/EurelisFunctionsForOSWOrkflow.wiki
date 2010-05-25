@@ -160,7 +160,7 @@ So it required both "*lockValue*" and "*destination*" parameters as describes be
 
 ===EmailNotificationFunction===
 
-This function allow to send a notification to the users. So has to works well, the SMTP must be configured (cf [HowToInstallTheModule#Mailhost_management]).
+This function allow to send a notification to the users. So has to works well, the SMTP must be configured (cf [HowToInstallTheModule#Mailhost_management Mailhost management]).
 
 The list of parameters is the following :
   * The list of receivers, set in the workflow description file with parameter "*receivers*"
@@ -182,8 +182,8 @@ Example: toto@eurelis.com;titi@myCompagny.com;opencms:reviewer;parameter:receive
 ====Email body configuration====
 
 The email body must contains key values that will be updated when sending the message :
-  * *[[initialcomment]]* : The creation comment
-  * *[[lastcomment]]* : The last entered comment
+  * *`[[`initialcomment`]]`* : The creation comment
+  * *`[[`lastcomment]]* : The last entered comment
   * *[[lastlastcomment]]* : The last last entered comment
   * *[[creator]]* : The login of the person that has create the workflow
   * *[[lastactor]]* : The login of the person that has perform the last action
@@ -200,7 +200,7 @@ Here is the way of using this function:
       s.bianco@eurelis.com;sebastien.bianco@gmail.com;opencms:reviewer
    </arg>
    <arg name="email_body">
-      Le(s) fichier(s) suivant vous ont été proposé à validation par [[creator]] : [[initialcomment]]
+      Le(s) fichier(s) suivant vous ont &eacute;t&eacute; propos&eacute; &agrave; validation par [[creator]] : [[initialcomment]]
    </arg>
    <arg name="email_subject">
       [Validation] Des fichiers sont en demande de validation.
