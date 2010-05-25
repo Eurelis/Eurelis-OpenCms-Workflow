@@ -246,8 +246,8 @@ This string contains the description of the rights to add (nothing). This new ri
 
   * _opencms:u:Toto:rw_ : the user with login "Toto" receive read/write rights
   * _opencms:r:Root Administrator:w_ : All person with role "Root Administrator" receive write rights.
-  * _opencms:u:{^a*$}:r_ : All user with login starting with "a" receive the read rights
-  * _opencms:g:{^a*$}:`_`_ : All user that are members of a group which name starts with "a" are denied of rights
+  * _opencms:u:{^a`*`$}:r_ : All user with login starting with "a" receive the read rights
+  * _opencms:g:{^a`*`$}:`_`_ : All user that are members of a group which name starts with "a" are denied of rights
   * _instance:u:author:r_ : The creator of the workflow instance receive read rights
   * _parameter:u:receivers:rw_ :  All user which login have been listed in the parameter "receivers" when starting the instance of the workflow receive read/write rights
   * _property:u:reviewer:rw_ : All user which login have been listed in the property "reviewer" relative to a file attached to a workflow receive the read/write rights
